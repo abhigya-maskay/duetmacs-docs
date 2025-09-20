@@ -7,11 +7,11 @@ aliases: [Implementation Checklist, Story 001 Implementation Checklist]
 
 Use this step-by-step checklist to implement Story 001. After each code step, run the associated test(s).
 
-- [ ] 0. Confirm stack and version authority
+- [x] 0. Confirm stack and version authority
   - Code: Decide Haskell + Cabal; CLI via `optparse-applicative`; color via `ansi-terminal`; logging via `katip`; version from `Paths_duet_rpc.version`.
   - Test: None (decision checkpoint).
 
-- [ ] 1. Scaffold Cabal project and executable
+- [x] 1. Scaffold Cabal project and executable
   - Code: Create package with exe `duet-rpc` at version `0.1.0`. Add deps: `optparse-applicative`, `text`, `ansi-terminal`, `katip`, `time`, `directory`, `filepath`. Test deps: `tasty`, `tasty-hunit`, `tasty-golden`, `typed-process`, `temporary`.
   - Test: `cabal build` succeeds. `cabal run duet-rpc -- --help` prints default help; exit 0.
 
