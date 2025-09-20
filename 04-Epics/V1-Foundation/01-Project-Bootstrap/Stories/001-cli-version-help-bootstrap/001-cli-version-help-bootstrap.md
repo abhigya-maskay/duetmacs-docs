@@ -2,7 +2,6 @@
 tags: [story, cli, bootstrap, foundation]
 aliases: [Story 001, CLI Bootstrap, Version Help Story]
 ---
-
 # Story 001: CLI Version/Help Bootstrap
 
 As a CLI user, I want a minimal `duet-rpc` binary that builds and exposes version and help so that I can verify installation and discover available commands.
