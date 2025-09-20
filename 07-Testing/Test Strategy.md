@@ -12,7 +12,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 
 ## Objectives
 - Verify `duet-rpc` installs and responds with version/help consistently.
-- Establish deterministic behavior for logging, color, output, and exit codes.
+- Establish deterministic behavior for logging, color, and output.
 - Anchor future stories with a stable, testable CLI entrypoint.
 
 ## In Scope
@@ -47,20 +47,20 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - Optional: Property tests (hedgehog) on parser invariants where valuable.
 
 ## Prioritization
-- P0: Version/help correctness; error handling; color rules off paths; logging debug path; newline termination; exit codes.
+- P0: Version/help correctness; error handling; color rules off paths; logging debug path; newline termination.
 - P1: Short flags parity; color-on-TTY; log redirection to file; default log-level behavior.
 - P2: Config skeleton constants existence and precedence doc.
 
 ## Test Matrix (Selected)
 
 ### Version
-- E2E | P0 | `duet-rpc --version` prints semver; exit 0.
-- E2E | P0 | `duet-rpc version` prints same semver; exit 0.
+- E2E | P0 | `duet-rpc --version` prints semver.
+- E2E | P0 | `duet-rpc version` prints same semver.
 - Unit | P0 | VersionManager returns single-source version; formatted consistently.
 
 ### Help
-- E2E | P0 | `duet-rpc --help` and `duet-rpc` show synopsis, subcommands, footer; exit 0.
-- Integration | P0 | Unknown subcommand/flag → error + usage; exit 2; no stack trace.
+- E2E | P0 | `duet-rpc --help` and `duet-rpc` show synopsis, subcommands, footer.
+- Integration | P0 | Unknown subcommand/flag → error + usage; no stack trace.
 - Unit | P1 | HelpFormatter/CLI metadata builds synopsis `duet-rpc [COMMAND] [OPTIONS]`, lists `version`, `doctor`, `rpc`, `prompt`, footer.
 
 ### Color/TTY
@@ -68,7 +68,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - E2E | P1 | TTY attached → colors present; piped → plain.
 
 ### Logging
-- E2E | P0 | `--log-level debug version` emits structured debug logs to stderr; stdout is version; exit 0.
+- E2E | P0 | `--log-level debug version` emits structured debug logs to stderr; stdout is version.
 - E2E | P1 | Default warn+ only; `version` outputs no logs by default.
 - E2E | P1 | `DUET_RPC_LOG=<file>` routes logs to file; stderr quiet.
 - E2E | P1 | `DUET_RPC_LOG` invalid path → logger falls back to stderr with a warning; command output/exit unchanged.
@@ -79,34 +79,34 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 
 ## Key Test Cases
 - T-CLI-VER-001 (P0): `duet-rpc --version`
-  - Expect: stdout `<semver>\n`; stderr empty; exit 0.
+  - Expect: stdout `<semver>\n`; stderr empty.
 - T-CLI-VER-002 (P0): `duet-rpc version`
   - Expect: same as T-CLI-VER-001; versions equal.
 - T-CLI-HLP-001 (P0): `duet-rpc --help`
-  - Expect: synopsis `duet-rpc [COMMAND] [OPTIONS]`; lists `version`, `doctor`, `rpc`, `prompt`; footer “See 'duet-rpc <command> --help'...”; exit 0; newline.
+  - Expect: synopsis `duet-rpc [COMMAND] [OPTIONS]`; lists `version`, `doctor`, `rpc`, `prompt`; footer “See 'duet-rpc <command> --help'...”; newline.
 - T-CLI-HLP-002 (P0): `duet-rpc` (no args)
-  - Expect: same as `--help`; exit 0.
+  - Expect: same as `--help`.
 - T-CLI-ERR-001 (P0): `duet-rpc frobnicate`
-  - Expect: error + usage on stderr; exit 2; no stack trace; stdout empty.
+  - Expect: error + usage on stderr; no stack trace; stdout empty.
 - T-CLI-CLR-001 (P0): `NO_COLOR=1 duet-rpc --help`
-  - Expect: no ANSI sequences; exit 0.
+  - Expect: no ANSI sequences.
 - T-CLI-CLR-002 (P0): `duet-rpc --no-color --help`
-  - Expect: no ANSI regardless of TTY; exit 0.
+  - Expect: no ANSI regardless of TTY.
 - T-CLI-TTY-001 (P1): TTY-attached `duet-rpc --help`
   - Expect: ANSI color present; piped variant plain.
 - T-CLI-LOG-001 (P0): `duet-rpc --log-level debug version`
-  - Expect: stderr structured log line(s) with timestamp/level/message; stdout version; exit 0.
+  - Expect: stderr structured log line(s) with timestamp/level/message; stdout version.
 - T-CLI-LOG-002 (P1): `DUET_RPC_LOG=$TMP/duet.log duet-rpc version`
   - Expect: logs written to file; stderr quiet; file lines include timestamp/level/message.
 - T-CLI-LOG-NEG-001 (P1): `DUET_RPC_LOG=$TMP/nonexistent/subdir/file.log duet-rpc --log-level debug version`
-  - Expect: stderr contains a clear warning about failing to open/write log file (no stack trace); stdout version; exit 0.
+  - Expect: stderr contains a clear warning about failing to open/write log file (no stack trace); stdout version.
 - T-CLI-PERF-001 (P0): Measure duration of `--version` and `--help`
   - Expect: under threshold (e.g., <200ms CI); warmup first run.
 - T-CLI-SYN-001 (P1): `-h` and `-V` parity with long flags.
 - T-CLI-FMT-001 (P0): Newline at end of stdout/stderr outputs.
 
 ## Data & Environment Strategy
-- Process: Spawn `duet-rpc`; capture stdout, stderr, exit code separately.
+- Process: Spawn `duet-rpc`; capture stdout and stderr separately.
 - Env control: Set `NO_COLOR`, `DUET_RPC_LOG`, `--log-level` per test; isolate with per-test temp dirs.
 - TTY simulation: Prefer `script -q -c "<cmd>" /dev/null` on Unix-like CI to emulate a TTY; gate or use ConPTY alternatives on Windows.
 - Assertions: Golden help text (plain variant) via tasty-golden; regex for ANSI absence/presence and log structure; compare `version` outputs for equality.
@@ -115,12 +115,12 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
   - For invalid log path, assert presence of a warning substring (e.g., "log" and "failed"/"cannot") rather than exact wording.
 
 ## Traceability (AC → Tests)
-- `--version` prints semver; exit 0 → T-CLI-VER-001
-- `version` prints same semver; exit 0 → T-CLI-VER-002
-- `--help` shows synopsis/subcommands/footer; exit 0 → T-CLI-HLP-001
-- No args shows help; exit 0 → T-CLI-HLP-002
+- `--version` prints semver → T-CLI-VER-001
+- `version` prints same semver → T-CLI-VER-002
+- `--help` shows synopsis/subcommands/footer → T-CLI-HLP-001
+- No args shows help → T-CLI-HLP-002
 - Help lists `doctor`, `rpc`, `prompt` → T-CLI-HLP-001 golden
-- Unknown subcommand → error + usage; exit 2; no stack trace → T-CLI-ERR-001
+- Unknown subcommand → error + usage; no stack trace → T-CLI-ERR-001
 - Newline-terminated output → T-CLI-FMT-001
 - ~100ms responsiveness → T-CLI-PERF-001
 - `--log-level debug` logs structured debug → T-CLI-LOG-001
@@ -151,4 +151,4 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 ## Open Questions
 - Decision: For Story 001, tests cover `--log-level` only; a `--debug` alias (if added) will be covered in a later story.
 - Decision: CI OS matrix — Linux/macOS run full suite including TTY-based color tests (via `script`); Windows skips TTY color tests and runs non-TTY and NO_COLOR/`--no-color` tests.
-- Decision: Include negative case for invalid `DUET_RPC_LOG` path — logger must fall back to stderr with a warning; commands do not crash and exit codes follow normal semantics.
+- Decision: Include negative case for invalid `DUET_RPC_LOG` path — logger must fall back to stderr with a warning.

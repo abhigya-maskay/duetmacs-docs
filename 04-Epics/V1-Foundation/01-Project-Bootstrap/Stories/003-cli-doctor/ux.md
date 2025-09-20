@@ -10,11 +10,12 @@ Phase: Run Doctor, Goal: actionable diagnostics with clear next steps
 
 Entry: user runs `duet-rpc doctor [--json] [--verbose] [--no-color]`
 
-Exit:
-- Complete: all required checks pass; exit 0
-- Warn-only: non-fatal issues (e.g., no default config) with guidance; exit 0
-- Failure: at least one required check fails; exit 1
-- Internal error: unhandled error; exit 2
+
+Exit states:
+- Complete: all required checks pass
+- Warn-only: non-fatal issues (e.g., no default config) with guidance
+- Failure: at least one required check fails
+- Internal error: unhandled error
 
 Steps:
 - Parse flags
@@ -22,12 +23,11 @@ Steps:
 - Discover config using precedence (see Data/Decisions)
 - Run checks and collect statuses
 - Render output (human or JSON)
-- Set exit code per severity mapping
 
 Touchpoints:
 - Flags: `--json`, `--verbose`, `--no-color`
 - Output: human-readable checklist with statuses and next steps; structured JSON
-- Exit code: 0/1/2 per mapping
+
 - Color/Unicode: respect `NO_COLOR`; disable icons when not a TTY
 
 Copy (key labels/messages):
@@ -84,10 +84,6 @@ Data/Decisions:
   - Required: binary version, PATH resolution, OS/arch detection, readable config if explicitly specified or present in project
   - Warn-only: missing default config; unreadable default-location config
   - Fail: unreadable config when explicitly specified via `DUET_RPC_CONFIG` or found in project
-- Exit codes:
-  - 0 = OK or WARN only
-  - 1 = at least one required FAIL
-  - 2 = internal/unexpected error
 - JSON schema (final):
   - `version`: string
   - `platform`: { `os`, `arch` }

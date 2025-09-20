@@ -10,20 +10,19 @@ aliases: [Error Handler]
 - Author: Component Designer
 
 ## Purpose
-- Provide consistent error formatting and exit code management across all CLI operations.
+- Provide consistent error formatting across all CLI operations.
 
 ## Responsibilities
 - Format error messages for user-friendly display
-- Manage exit codes (0 success, 2 usage/validation errors, 1 runtime/unknown)
 - Suppress stack traces in production mode
 - Display usage hints on command errors
 - Note: Does not manage external subprocess lifecycle (spawn/retry handled by Emacs)
 
 ## Boundaries
-- In-scope: Error formatting, exit code standards, usage hint generation
+- In-scope: Error formatting, usage hint generation
 - Out-of-scope: Managing external subprocess lifecycle (spawn/retry), detailed system diagnostics
 - Inputs (conceptual): Error type, context, command state
-- Outputs (conceptual): Formatted error message, exit code
+- Outputs (conceptual): Formatted error message
 
 ## Collaborators & Dependencies
 - Internal: OutputFormatter (for error styling), HelpFormatter (for usage hints)

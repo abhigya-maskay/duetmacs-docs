@@ -24,13 +24,13 @@ As a CLI user, I want a `duet-rpc doctor` command that inspects my environment a
 - Establishes a consistent diagnostic surface for both local use and CI.
 
 ## Acceptance Criteria (Given/When/Then)
-- Given the binary is installed, When I run `duet-rpc doctor`, Then it returns exit code 0 on success and prints a human-readable checklist including: binary version, OS/arch, config file discovery locations, and PATH resolution of the binary.
+- Given the binary is installed, When I run `duet-rpc doctor`, Then it prints a human-readable checklist including: binary version, OS/arch, config file discovery locations, and PATH resolution of the binary.
 - Given a missing or unreadable default config, When I run `duet-rpc doctor`, Then it prints a clear warning with the expected locations and an example minimal config.
 - Given the `--json` flag, When I run `duet-rpc doctor --json`, Then it outputs structured JSON with the same checks and machine-readable statuses.
 - Given an optional `--verbose` flag, When I run `duet-rpc doctor --verbose`, Then it includes additional details like resolved paths, permissions, and environment overrides.
 
 - Given terminal capabilities and env, When I run with `--no-color` or `NO_COLOR=1` or in a non-TTY, Then output disables colors and Unicode icons; otherwise statuses are colorized.
-- Given failure conditions, When any required check fails, Then the command returns exit code 1; Given an unexpected internal error, Then it returns exit code 2; Given only warnings, Then it returns exit code 0.
+- Given failure conditions, When any required check fails, Then the command reports the failure; Given an unexpected internal error, Then it reports an error; Given only warnings, Then it still reports success with warnings.
 - Given `--verbose`, When the command runs, Then it includes a config discovery precedence trace (search order and attempted paths with statuses) and enumerates PATH entries along with the resolved executable path.
 - Given config is loaded, When doctor runs, Then it reports which config file (if any) was loaded and its path.
 - Given config is loaded, When doctor runs with `--verbose`, Then it shows parsed config values (redacting secrets like API keys).

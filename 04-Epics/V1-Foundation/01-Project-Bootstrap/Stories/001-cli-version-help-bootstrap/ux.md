@@ -7,12 +7,12 @@ aliases: [Story 001 UX, CLI Bootstrap UX, Version Help UX]
 UX need: Light
 
 Phase: Verify install and discover commands, Goal: Confirm binary responds and exposes version/help
-Entry: User has terminal access and `duet-rpc` installed; Exit: Version printed; help lists subcommands; process exits 0
+Entry: User has terminal access and `duet-rpc` installed; Exit: Version printed; help lists subcommands.
 
 Steps
-- User runs `duet-rpc --version` → prints `0.1.0`; exit 0
-- User runs `duet-rpc version` → prints `0.1.0`; exit 0
-- User runs `duet-rpc --help` or `duet-rpc` → prints help; exit 0
+- User runs `duet-rpc --version` → prints `0.1.0`
+- User runs `duet-rpc version` → prints `0.1.0`
+- User runs `duet-rpc --help` or `duet-rpc` → prints help
 
 Touchpoints
 - Commands: `duet-rpc --version`, `duet-rpc version`, `duet-rpc --help`, `duet-rpc`
@@ -30,8 +30,8 @@ Copy
 - Footer: See 'duet-rpc <command> --help' for more information.
 
 Patterns and States
-- Success: outputs match above; exit code 0
-- Error: unknown subcommand/flag → error + usage; exit code 2; no stack traces
+- Success: outputs match above
+- Error: unknown subcommand/flag → error + usage; no stack traces
 - Performance: responds within ~100ms; newline-terminated output
 - Color: colorized help when TTY; honor `NO_COLOR`; plain when piped
 - Logging: Default warn level to stderr; `--log-level` overrides; `DUET_RPC_LOG` redirects to file
@@ -39,14 +39,13 @@ Patterns and States
 
 Alt/Recovery
 - Invalid input: show error + usage; suggest `--help`
-- No args: show help; exit 0
+- No args: show help
 - Debug issues: Use `--log-level debug` for verbose logging
 - Log to file: Set `DUET_RPC_LOG=/path/to/file.log`
 
 Data/Decisions
 - Version authority: package manifest (e.g., Cargo.toml)
 - Help layout: CLI framework defaults (e.g., Clap)
-- Exit codes: 0 success; 2 incorrect usage
 
 Defaults
 - No args → help
@@ -59,5 +58,5 @@ Integration
 
 GSM
 - Goal: Provide discoverable CLI entrypoint
-- Signals: Correct text and exit codes across platforms
+- Signals: Correct text across platforms
 - Metrics: CI checks for `--version`/`--help` pass; local smoke test documented

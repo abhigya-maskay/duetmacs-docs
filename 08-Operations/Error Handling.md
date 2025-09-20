@@ -9,13 +9,13 @@ aliases: [Error Handling, Error Management]
 Scope: Story 001 only (CLI Version/Help Bootstrap)
 
 ## Overview
-Error handling for Story 001 focuses solely on the minimal CLI surface: `--version`, `version`, and `--help` (help shown by default with no args). The goal is clear user feedback, correct exit codes, and no stack traces.
+Error handling for Story 001 focuses solely on the minimal CLI surface: `--version`, `version`, and `--help` (help shown by default with no args). The goal is clear user feedback and no stack traces.
 
 ## Scope (Story 001)
 
 ### Error Categories (Story 001)
 - **Usage Errors** — Unknown subcommand/flag, invalid arguments. Show a concise error followed by usage/help.
-- **Log Initialization Warning** — Invalid/unwritable `DUET_RPC_LOG` path. Warn once, fallback to stderr; command exit code follows normal semantics (no crash).
+- **Log Initialization Warning** — Invalid/unwritable `DUET_RPC_LOG` path. Warn once, fallback to stderr.
 - **Internal Errors (unexpected)** — Treat as a generic runtime error without stack trace.
 
 ### Error Handling Strategy

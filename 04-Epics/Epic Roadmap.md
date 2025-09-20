@@ -18,9 +18,9 @@ Note on naming
 - CLI Scope: CLI project scaffolding (binary: `duet-rpc`; language toolchain; entrypoint; subcommands: `version`, `doctor`, `rpc --ping`, `prompt --dry-run`); logging; config loading precedence; packaging/release scripts.
 - Dependencies: None.
 - Acceptance:
-  - CLI: `duet-rpc --version` prints version; `duet-rpc doctor` checks env and prints a human-readable checklist, emits stable JSON with `--json`, respects `NO_COLOR`/non-TTY, and uses exit codes 0/1/2; `duet-rpc rpc --ping` responds with `pong` (text) or minimal JSON with `--json`, supports `--timeout <ms>` with exit code 124 on timeout; `duet-rpc prompt --file <f> --dry-run` returns a no-op response with a labeled block in text mode and, with `--json`, emits fields `mode`, `file`, `size_bytes`, `sha256`, `received_at`; accepts but ignores provider/model flags with warnings; usage errors exit 2 with a help hint; file I/O errors exit 3.
+  - CLI: `duet-rpc --version` prints version; `duet-rpc doctor` checks env and prints a human-readable checklist, emits stable JSON with `--json`, respects `NO_COLOR`/non-TTY; `duet-rpc rpc --ping` responds with `pong` (text) or minimal JSON with `--json`; `duet-rpc prompt --file <f> --dry-run` returns a no-op response with a labeled block in text mode and, with `--json`, emits fields `mode`, `file`, `size_bytes`, `sha256`, `received_at`; accepts but ignores provider/model flags with warnings.
     - Help behavior: synopsis `duet-rpc [COMMAND] [OPTIONS]`; footer `See 'duet-rpc <command> --help' for more information.`; colorized when TTY and honoring `NO_COLOR`; plain when piped; output is newline-terminated.
-    - Error handling: unknown subcommand/flag prints error + usage and exits with code 2; no stack traces.
+    - Error handling: unknown subcommand/flag prints error + usage; no stack traces.
     - Version authority: version string is sourced from the package manifest.
   - Emacs: Package loads; `M-x duet-rpc-version` shows duet-rpc version; command to start/stop duet-rpc subprocess; health check shows connected/ping OK; basic command palette entry present.
 - CI: Lints/builds/tests run on PR; `duet-rpc doctor` included in smoke checks across the support matrix; release artifacts produced for CLI; packaging instructions validated.

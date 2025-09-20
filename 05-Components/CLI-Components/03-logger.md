@@ -32,4 +32,4 @@ aliases: [Logger]
 ## Risks & Open Questions
 - Decision: No built-in log rotation in Story 001; rely on external rotation.
 - Risk: Performance impact of debug logging — mitigate by guarding construction of debug messages.
-- Risk: Invalid/unwritable `DUET_RPC_LOG` path — fallback to stderr with a single clear warning, without affecting command output or exit codes.
+- Risk: Invalid/unwritable `DUET_RPC_LOG` path — fallback to stderr with a single clear warning, without affecting command output.

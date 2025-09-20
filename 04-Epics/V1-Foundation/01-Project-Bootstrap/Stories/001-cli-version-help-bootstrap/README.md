@@ -23,7 +23,7 @@ This story introduces the foundational CLI components (canonical specs in `05-Co
 - [[Logger]] - Structured logging infrastructure
 - [[Config Loader]] - Configuration management skeleton
 - [[Help Formatter]] - Help text generation
-- [[Error Handler]] - Error formatting and exit codes
+- [[Error Handler]] - Error formatting
 - [[CLI Parser]] - Command-line argument parsing
 - [[05-Components/CLI-Components/component-map|Component Map]] - Overview of all components
 
@@ -36,7 +36,6 @@ This story introduces the foundational CLI components (canonical specs in `05-Co
 
 ## Acceptance Criteria
 - Binary responds to version/help commands
-- Proper exit codes and error messages
 - Color output respects TTY and NO_COLOR
 - Structured logging to stderr/file
 - ~100ms response time

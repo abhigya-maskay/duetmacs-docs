@@ -58,7 +58,7 @@ As a CLI user, I want a minimal `duet-rpc` binary that builds and exposes versio
  - Given `--log-level debug`, When I run `duet-rpc --log-level debug version`, Then structured debug logs appear on stderr with timestamp, level, and message.
  - Given no log flags, When I run any command, Then only warnings and errors are logged to stderr by default.
 - Given `DUET_RPC_LOG=/tmp/duet.log`, When I run any command, Then logs are written to the specified file instead of stderr.
-- Given `DUET_RPC_LOG` points to an invalid or unwritable path, When I run any command, Then logging falls back to stderr with a clear single warning about the log file failure (no stack trace), the command output remains unchanged, and the command's exit code follows its normal semantics (no crash).
+- Given `DUET_RPC_LOG` points to an invalid or unwritable path, When I run any command, Then logging falls back to stderr with a clear single warning about the log file failure (no stack trace) and the command output remains unchanged.
  - Given `NO_COLOR=1` or piped output, When I run `duet-rpc --help`, Then output contains no ANSI color codes.
  - Given a TTY without NO_COLOR, When I run `duet-rpc --help`, Then output includes colors for headings and commands.
  - Given `--no-color` flag, When I run `duet-rpc --no-color --help`, Then output contains no ANSI codes regardless of TTY.

@@ -63,7 +63,6 @@ None - this is the foundational epic that all others depend on.
 - `duet-rpc doctor` checks environment and prints checklist
 - Emits stable JSON with `--json` flag
 - Respects `NO_COLOR`/non-TTY environments
-- Uses proper exit codes (0/1/2)
 - `duet-rpc rpc --ping` responds with pong
 - `duet-rpc prompt --file <f> --dry-run` returns no-op response
 - Help behavior follows Unix conventions

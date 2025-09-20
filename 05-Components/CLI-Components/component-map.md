@@ -12,7 +12,7 @@
 - OutputFormatter: Purpose — Handle terminal output with color and symbol management. Boundary — Infrastructure I/O. Key deps — None (system calls).
 - Logger: Purpose — Provide structured logging with level control. Boundary — Infrastructure logging. Key deps — None.
 - ConfigLoader: Purpose — Define config paths/types and defaults (skeleton only). Boundary — Infrastructure config (no I/O in Story 001). Key deps — None.
-- ErrorHandler: Purpose — Format errors and manage exit codes consistently. Boundary — Application error handling. Key deps — OutputFormatter.
+- ErrorHandler: Purpose — Format errors consistently. Boundary — Application error handling. Key deps — OutputFormatter.
 
 ## Notes
 - Decisions:
@@ -21,5 +21,4 @@
   - Output: ansi-terminal; cache TTY detection; honor NO_COLOR/--no-color; DUET_RPC_ASCII override.
   - Logging: katip; default scribe stderr; file scribe when `DUET_RPC_LOG` is set; default level warn; no built-in rotation in Story 001.
   - Config: Document precedence (flags > env > project `.duet-rpc.toml` > user `~/.config/duet-rpc/config.toml` > defaults); actual parsing/validation deferred to Story 003.
-  - Errors: exit codes 0 success, 2 usage, 1 runtime; no stack traces in normal mode.
 - Assumptions: CLI framework provides base help structure.

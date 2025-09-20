@@ -13,42 +13,40 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
 
 - [x] 1. Scaffold Cabal project and executable
   - Code: Create package with exe `duet-rpc` at version `0.1.0`. Add deps: `optparse-applicative`, `text`, `ansi-terminal`, `katip`, `time`, `directory`, `filepath`. Test deps: `tasty`, `tasty-hunit`, `tasty-golden`, `typed-process`, `temporary`.
-  - Test: `cabal build` succeeds. `cabal run duet-rpc -- --help` prints default help; exit 0.
+  - Test: `cabal build` succeeds. `cabal run duet-rpc -- --help` prints default help.
 
 - [ ] 2. Add entrypoint and base CLI wiring
-  - Code: Implement `app/Main.hs` with `optparse-applicative`. Enable `showHelpOnEmpty` and `showHelpOnError`. Parse globals: `-V/--version`, `-h/--help`, `--log-level {debug|info|warn|error}`, `--no-color`. Register subcommands: `version`, `doctor`, `rpc`, `prompt` (only `version` wired for now). No args → help (exit 0). Unknown subcmd/flag → error + usage (exit 2).
+  - Code: Implement `app/Main.hs` with `optparse-applicative`. Enable `showHelpOnEmpty` and `showHelpOnError`. Parse globals: `-V/--version`, `-h/--help`, `--log-level {debug|info|warn|error}`, `--no-color`. Register subcommands: `version`, `doctor`, `rpc`, `prompt` (only `version` wired for now). No args → help. Unknown subcmd/flag → error + usage.
   - Test:
-    - T-CLI-HLP-002: `duet-rpc` (no args) shows help; exit 0.
-    - T-CLI-ERR-001: `duet-rpc frobnicate` → error + usage on stderr; stdout empty; exit 2; no stack trace.
+    - T-CLI-HLP-002: `duet-rpc` (no args) shows help.
+    - T-CLI-ERR-001: `duet-rpc frobnicate` → error + usage on stderr; stdout empty; no stack trace.
 
 - [ ] 3. Implement VersionManager and `version` command
-  - Code: Create module to read `Paths_duet_rpc.version` and render semver. Wire `version` subcommand and global `--version` to print the same string to stdout with trailing newline; exit 0.
+  - Code: Create module to read `Paths_duet_rpc.version` and render semver. Wire `version` subcommand and global `--version` to print the same string to stdout with trailing newline.
   - Test:
-    - T-CLI-VER-001: `duet-rpc --version` prints semver; stderr empty; exit 0.
-    - T-CLI-VER-002: `duet-rpc version` equals `--version`; exit 0.
+    - T-CLI-VER-001: `duet-rpc --version` prints semver; stderr empty.
+    - T-CLI-VER-002: `duet-rpc version` equals `--version`.
 
 - [ ] 4. Implement OutputFormatter (color/TTY/no-color rules)
   - Code: Detect TTY for stdout/stderr; precedence `--no-color` > `NO_COLOR` > isTTY. Use `ansi-terminal` SGR when enabled. All writes newline-terminated.
   - Test:
-    - T-CLI-CLR-001: `NO_COLOR=1 duet-rpc --help` → no ANSI sequences; exit 0.
-    - T-CLI-CLR-002: `duet-rpc --no-color --help` → no ANSI regardless of TTY; exit 0.
+    - T-CLI-CLR-001: `NO_COLOR=1 duet-rpc --help` → no ANSI sequences.
+    - T-CLI-CLR-002: `duet-rpc --no-color --help` → no ANSI regardless of TTY.
 
 - [ ] 5. Shape final help text
   - Code: Configure help: synopsis `duet-rpc [COMMAND] [OPTIONS]`; subcommands `version`, `doctor`, `rpc`, `prompt` with one-liners; footer “See 'duet-rpc <command> --help' for more information.” Use `optparse-applicative` defaults for structure.
   - Test:
-    - T-CLI-HLP-001: `duet-rpc --help` (plain mode) matches golden snapshot; exit 0.
-    - T-CLI-HLP-002: `duet-rpc` (no args) equals `--help`; exit 0.
+    - T-CLI-HLP-001: `duet-rpc --help` (plain mode) matches golden snapshot.
+    - T-CLI-HLP-002: `duet-rpc` (no args) equals `--help`.
 
 - [ ] 6. Implement Logger with level, stderr/file routing, fallback
-  - Code: Initialize `katip` at startup; default level `warn` to stderr. Parse `--log-level {debug|info|warn|error}`. If `DUET_RPC_LOG` set, write logs to file; on invalid path, fall back to stderr with a single clear warning (no stack trace); command output and exit unaffected.
+  - Code: Initialize `katip` at startup; default level `warn` to stderr. Parse `--log-level {debug|info|warn|error}`. If `DUET_RPC_LOG` set, write logs to file; on invalid path, fall back to stderr with a single clear warning (no stack trace); command output unaffected.
   - Test:
-    - T-CLI-LOG-001: `duet-rpc --log-level debug version` → stdout version; stderr has structured debug log(s) with timestamp/level/message; exit 0.
+    - T-CLI-LOG-001: `duet-rpc --log-level debug version` → stdout version; stderr has structured debug log(s) with timestamp/level/message.
     - T-CLI-LOG-002 (P1): `DUET_RPC_LOG=$TMP/duet.log duet-rpc version` → logs to file; stderr quiet.
-    - T-CLI-LOG-NEG-001 (P1): `DUET_RPC_LOG=$TMP/nonexistent/x/y.log duet-rpc --log-level debug version` → stderr shows warning; stdout version; exit 0.
+    - T-CLI-LOG-NEG-001 (P1): `DUET_RPC_LOG=$TMP/nonexistent/x/y.log duet-rpc --log-level debug version` → stderr shows warning; stdout version.
 
-- [ ] 7. Add ErrorHandler (exit codes and usage hints)
-  - Code: Standardize exit codes: 0 success, 2 usage/validation, 1 unexpected. Suppress stack traces for user errors; include “Use --help” hint on usage errors; integrate with CLI error paths.
-  - Test: Re-validate T-CLI-ERR-001 (exit 2, error + usage, no stack trace).
+  - Test: Re-validate T-CLI-ERR-001 (error + usage, no stack trace).
 
 - [ ] 8. Add Config skeleton (constants only)
   - Code: Define config search constants and placeholder config struct. Document precedence: `DUET_RPC_CONFIG` → project `.duet-rpc.toml` → XDG/home. Do not load yet.
@@ -71,7 +69,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Test: T-CLI-TTY-001 (P1): TTY-attached help includes ANSI; piped/plain does not.
 
 - [ ] 13. Unit tests for pure components
-  - Code: Unit tests for VersionManager formatting; OutputFormatter precedence and ANSI absence when disabled; ErrorHandler exit code mapping and “Use --help” hint.
+  - Code: Unit tests for VersionManager formatting; OutputFormatter precedence and ANSI absence when disabled; ErrorHandler “Use --help” hint.
   - Test: Unit suite green; 70–80%+ coverage on changed code; 100% on critical branches.
 
 - [ ] 14. Final matrix and DoD
@@ -82,12 +80,11 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
 
 ## Definition of Done (Story 001)
 
-- [ ] `duet-rpc --version` and `duet-rpc version` print the same semver; exit 0.
-- [ ] `duet-rpc --help` and `duet-rpc` show synopsis, subcommands, and footer; exit 0.
-- [ ] Unknown subcommand/flag → error + usage; exit 2; no stack trace.
+- [ ] `duet-rpc --version` and `duet-rpc version` print the same semver.
+- [ ] `duet-rpc --help` and `duet-rpc` show synopsis, subcommands, and footer.
+- [ ] Unknown subcommand/flag → error + usage; no stack trace.
 - [ ] Help output color rules: colorized on TTY; plain when piped; honors `NO_COLOR` and `--no-color`.
 - [ ] Logging: default warn to stderr; `--log-level` applied; `DUET_RPC_LOG` routes to file; invalid path falls back to stderr with single warning.
 - [ ] All outputs newline-terminated.
 - [ ] Typical run responds within ~100ms (relaxed to ~200ms in CI).
 - [ ] Tests (P0) are green; golden help approved.
-
