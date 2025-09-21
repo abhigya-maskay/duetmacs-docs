@@ -2,7 +2,6 @@
 tags: [story/001, implementation, checklist, cli]
 aliases: [Implementation Checklist, Story 001 Implementation Checklist]
 ---
-
 # Implementation Checklist — Story 001: CLI Version/Help Bootstrap
 
 Use this step-by-step checklist to implement Story 001. After each code step, run the associated test(s).
@@ -21,13 +20,13 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
     - T-CLI-HLP-002: `duet-rpc` (no args) shows help.
     - T-CLI-ERR-001: `duet-rpc frobnicate` → error + usage on stderr; stdout empty; no stack trace.
 
-- [ ] 3. Implement VersionManager and `version` command
+- [x] 3. Implement VersionManager and `version` command
   - Code: Create module to read `Paths_duet_rpc.version` and render semver. Wire `version` subcommand and global `--version` to print the same string to stdout with trailing newline.
   - Test:
     - T-CLI-VER-001: `duet-rpc --version` prints semver; stderr empty.
     - T-CLI-VER-002: `duet-rpc version` equals `--version`.
 
-- [ ] 4. Implement OutputFormatter (color/TTY/no-color rules)
+- [x] 4. Implement OutputFormatter (color/TTY/no-color rules)
   - Code: Detect TTY for stdout/stderr; precedence `--no-color` > `NO_COLOR` > isTTY. Use `ansi-terminal` SGR when enabled. All writes newline-terminated.
   - Test:
     - T-CLI-CLR-001: `NO_COLOR=1 duet-rpc --help` → no ANSI sequences.
