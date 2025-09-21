@@ -15,7 +15,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Code: Create package with exe `duet-rpc` at version `0.1.0`. Add deps: `optparse-applicative`, `text`, `ansi-terminal`, `katip`, `time`, `directory`, `filepath`. Test deps: `tasty`, `tasty-hunit`, `tasty-golden`, `typed-process`, `temporary`.
   - Test: `cabal build` succeeds. `cabal run duet-rpc -- --help` prints default help.
 
-- [ ] 2. Add entrypoint and base CLI wiring
+- [x] 2. Add entrypoint and base CLI wiring
   - Code: Implement `app/Main.hs` with `optparse-applicative`. Enable `showHelpOnEmpty` and `showHelpOnError`. Parse globals: `-V/--version`, `-h/--help`, `--log-level {debug|info|warn|error}`, `--no-color`. Register subcommands: `version`, `doctor`, `rpc`, `prompt` (only `version` wired for now). No args → help. Unknown subcmd/flag → error + usage.
   - Test:
     - T-CLI-HLP-002: `duet-rpc` (no args) shows help.
