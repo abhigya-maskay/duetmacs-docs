@@ -32,13 +32,13 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
     - T-CLI-CLR-001: `NO_COLOR=1 duet-rpc --help` → no ANSI sequences.
     - T-CLI-CLR-002: `duet-rpc --no-color --help` → no ANSI regardless of TTY.
 
-- [ ] 5. Shape final help text
+- [x] 5. Shape final help text
   - Code: Configure help: synopsis `duet-rpc [COMMAND] [OPTIONS]`; subcommands `version`, `doctor`, `rpc`, `prompt` with one-liners; footer “See 'duet-rpc <command> --help' for more information.” Use `optparse-applicative` defaults for structure.
   - Test:
     - T-CLI-HLP-001: `duet-rpc --help` (plain mode) matches golden snapshot.
     - T-CLI-HLP-002: `duet-rpc` (no args) equals `--help`.
 
-- [ ] 6. Implement Logger with level, stderr/file routing, fallback
+- [x] 6. Implement Logger with level, stderr/file routing, fallback
   - Code: Initialize `katip` at startup; default level `warn` to stderr. Parse `--log-level {debug|info|warn|error}`. If `DUET_RPC_LOG` set, write logs to file; on invalid path, fall back to stderr with a single clear warning (no stack trace); command output unaffected.
   - Test:
     - T-CLI-LOG-001: `duet-rpc --log-level debug version` → stdout version; stderr has structured debug log(s) with timestamp/level/message.
