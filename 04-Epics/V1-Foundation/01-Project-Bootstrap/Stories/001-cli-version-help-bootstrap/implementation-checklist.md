@@ -55,7 +55,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Code: Audit all writes (version, help, errors) to ensure trailing newline.
   - Test: T-CLI-FMT-001: Assert newline at end of stdout/stderr outputs.
 
-- [ ] 10. Performance sanity
+- [x] 10. Performance sanity
   - Code: Keep startup minimal; avoid heavy IO on boot; lazy/open log file on first write where possible.
   - Test: T-CLI-PERF-001: Measure `duet-rpc --version` and `--help` complete within relaxed CI threshold (e.g., <200ms after warmup).
 
