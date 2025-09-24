@@ -51,7 +51,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Code: Define config search constants and placeholder config struct. Document precedence: `DUET_RPC_CONFIG` → project `.duet-rpc.toml` → XDG/home. Do not load yet.
   - Test: Unit test asserts constants/types exist and precedence order is documented (P2).
 
-- [ ] 9. Ensure newline-terminated outputs everywhere
+- [x] 9. Ensure newline-terminated outputs everywhere
   - Code: Audit all writes (version, help, errors) to ensure trailing newline.
   - Test: T-CLI-FMT-001: Assert newline at end of stdout/stderr outputs.
 
