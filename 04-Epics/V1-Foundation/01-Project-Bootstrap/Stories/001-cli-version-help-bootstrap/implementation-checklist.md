@@ -59,7 +59,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Code: Keep startup minimal; avoid heavy IO on boot; lazy/open log file on first write where possible.
   - Test: T-CLI-PERF-001: Measure `duet-rpc --version` and `--help` complete within relaxed CI threshold (e.g., <200ms after warmup).
 
-- [ ] 11. Test suite scaffolding and golden setup
+- [x] 11. Test suite scaffolding and golden setup
   - Code: Add `test` target; helper to spawn built exe via `typed-process`; per-test temp dirs via `temporary`. Store `test/golden/help_plain.txt` captured with `NO_COLOR=1 duet-rpc --help`.
   - Test: `cabal test` runs; E2E tests green for: T-CLI-VER-001/002, T-CLI-HLP-001/002, T-CLI-ERR-001, T-CLI-CLR-001/002; golden under VCS.
 
