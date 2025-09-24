@@ -47,7 +47,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
 
   - Test: Re-validate T-CLI-ERR-001 (error + usage, no stack trace).
 
-- [ ] 8. Add Config skeleton (constants only)
+- [x] 8. Add Config skeleton (constants only)
   - Code: Define config search constants and placeholder config struct. Document precedence: `DUET_RPC_CONFIG` → project `.duet-rpc.toml` → XDG/home. Do not load yet.
   - Test: Unit test asserts constants/types exist and precedence order is documented (P2).
 
