@@ -63,7 +63,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Code: Add `test` target; helper to spawn built exe via `typed-process`; per-test temp dirs via `temporary`. Store `test/golden/help_plain.txt` captured with `NO_COLOR=1 duet-rpc --help`.
   - Test: `cabal test` runs; E2E tests green for: T-CLI-VER-001/002, T-CLI-HLP-001/002, T-CLI-ERR-001, T-CLI-CLR-001/002; golden under VCS.
 
-- [ ] 12. Optional TTY color test (platform-gated)
+- [x] 12. Optional TTY color test (platform-gated)
   - Code: Add Unix-only test using `script -q -c 'duet-rpc --help' /dev/null` to emulate TTY; skip on Windows.
   - Test: T-CLI-TTY-001 (P1): TTY-attached help includes ANSI; piped/plain does not.
 
