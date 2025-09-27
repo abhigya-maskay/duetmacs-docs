@@ -67,7 +67,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Code: Add Unix-only test using `script -q -c 'duet-rpc --help' /dev/null` to emulate TTY; skip on Windows.
   - Test: T-CLI-TTY-001 (P1): TTY-attached help includes ANSI; piped/plain does not.
 
-- [ ] 13. Unit tests for pure components
+- [x] 13. Unit tests for pure components
   - Code: Unit tests for VersionManager formatting; OutputFormatter precedence and ANSI absence when disabled; ErrorHandler “Use --help” hint.
   - Test: Unit suite green; 70–80%+ coverage on changed code; 100% on critical branches.
 
