@@ -52,7 +52,7 @@ As a CLI user, I want a minimal `duet-rpc` binary that builds and exposes versio
 - Given the binary is installed, When I run `duet-rpc --help`, Then it shows a synopsis and lists subcommands `version`, `doctor`, `rpc`, and `prompt` with one-line descriptions, and exits 0.
 - Given no arguments, When I run `duet-rpc`, Then it prints the help text and exits 0.
 - Given the help output, When I read it, Then it clearly indicates that `doctor`, `rpc`, and `prompt` are available subcommands (their behavior implemented in later stories).
- - Given an unknown subcommand or flag is provided, When I run `duet-rpc <unknown>`, Then the CLI prints an error followed by usage/help, exits with the non-zero status produced by the CLI library, and does not print a stack trace.
+- Given an unknown subcommand or flag is provided, When I run `duet-rpc <unknown>`, Then the CLI prints an error followed by usage/help, exits with status `1` (optparse-applicative's usage-error default), and does not print a stack trace.
 - Given any output is printed, Then it is newline-terminated and routed through the shared ShellFormatter; help output follows the same color policy as other commands (colorized on a TTY, honoring `NO_COLOR`/`--no-color`, and plain when piped), with coverage exercised via the `doctor` command snapshot.
  - Given a help synopsis is shown, Then it includes `duet-rpc [COMMAND] [OPTIONS]` and a footer: `See 'duet-rpc <command> --help' for more information.`
  - Given typical developer hardware, Then the above commands respond within ~100ms.

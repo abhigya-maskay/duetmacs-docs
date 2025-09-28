@@ -26,9 +26,10 @@ Error handling for Story 001 focuses solely on the minimal CLI surface: `--versi
 
 ### Key Requirements (Story 001)
 - Exit codes:
-  - `0` — Success
-  - `2` — Usage error (unknown command/flag, invalid args)
-  - `1` — Generic runtime error (unexpected)
+  - `0` — Success.
+  - `1` — Usage errors (unknown command/flag, invalid args). We align with optparse-applicative's default `ExitFailure 1` for Story 001 instead of overriding the parser to emit `2`.
+  - `1` — Generic runtime error (unexpected). Differentiating runtime vs usage exit codes is deferred; both surface as `ExitFailure 1` today.
+- Validated by T-CLI-ERR-001/T-CLI-ERR-002 (see [[07-Testing/Test Strategy|Test Strategy]]) to lock the exit code policy in place.
 - No stack traces on user-facing output
 - No sensitive data in error messages
 

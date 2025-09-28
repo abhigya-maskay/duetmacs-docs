@@ -33,6 +33,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 ## Inputs & References
 - Story: [[001-cli-version-help-bootstrap|Story 001: CLI Version/Help Bootstrap]]
 - Components: See [[05-Components/CLI-Components/README|CLI Components]]
+- Operations: [[08-Operations/Error Handling|Error handling exit code policy (ExitFailure 1)]]
 
 ## Approach
 - Feature-first, risk-based coverage with P0 critical-path priority.
