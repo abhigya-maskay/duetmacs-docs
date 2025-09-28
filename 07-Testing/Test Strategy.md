@@ -89,6 +89,8 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
   - Expect: same as `--help`.
 - T-CLI-ERR-001 (P0): `duet-rpc frobnicate`
   - Expect: error + usage on stderr; no stack trace; stdout empty.
+- T-CLI-ERR-002 (P0): `duet-rpc --frobnicate`
+  - Expect: same stderr usage text; stdout empty; exit `1`; no stack trace.
 - T-CLI-CLR-001 (P0): `NO_COLOR=1 duet-rpc --help`
   - Expect: no ANSI sequences.
 - T-CLI-CLR-002 (P0): `duet-rpc --no-color --help`
@@ -122,6 +124,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - No args shows help → T-CLI-HLP-002
 - Help lists `doctor`, `rpc`, `prompt` → T-CLI-HLP-001 golden
 - Unknown subcommand → error + usage; no stack trace → T-CLI-ERR-001
+- Unknown flag → error + usage; no stack trace → T-CLI-ERR-002
 - Newline-terminated output → T-CLI-FMT-001
  
 - `--log-level debug` logs structured debug → T-CLI-LOG-001

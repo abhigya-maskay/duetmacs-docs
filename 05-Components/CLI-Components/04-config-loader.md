@@ -17,6 +17,7 @@ aliases: [Config Loader]
 - Define a `Config` data structure with sensible defaults
 - Expose pure helpers for precedence ordering and default resolution
 - Defer all file I/O and merging to a later story (Story 003)
+- Verification: Unit coverage in `test/Duet/Rpc/Test/Unit/ConfigLoader.hs` guards search-order constants and defaults
 
 ## Boundaries
 - In-scope (Story 001): Constants for search paths/precedence, `Config` type and defaults
