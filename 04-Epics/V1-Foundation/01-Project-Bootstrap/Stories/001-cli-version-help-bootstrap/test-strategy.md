@@ -70,7 +70,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests, Version Help Tests]
 
 ### Performance/Format
 - E2E | P0 | `--version`/`--help` complete ~100ms (CI threshold relaxed).
-- E2E | P0 | All outputs newline-terminated.
+- E2E | P0 | All outputs we emit directly are newline-terminated (library-generated parser errors may vary).
 
 ## Key Test Cases
 - T-CLI-VER-001 (P0): `duet-rpc --version`
@@ -82,7 +82,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests, Version Help Tests]
 - T-CLI-HLP-002 (P0): `duet-rpc` (no args)
   - Expect: same as `--help`.
 - T-CLI-ERR-001 (P0): `duet-rpc frobnicate`
-  - Expect: error + usage on stderr; no stack trace; stdout empty.
+  - Expect: non-zero exit; `optparse-applicative` prints error + usage to stderr; stdout empty; no stack trace.
 - T-CLI-CLR-001 (P0): `NO_COLOR=1 duet-rpc --help`
   - Expect: no ANSI sequences.
 - T-CLI-CLR-002 (P0): `duet-rpc --no-color --help`
@@ -115,7 +115,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests, Version Help Tests]
 - `--help` shows synopsis/subcommands/footer → T-CLI-HLP-001
 - No args shows help → T-CLI-HLP-002
 - Help lists `doctor`, `rpc`, `prompt` → T-CLI-HLP-001 golden
-- Unknown subcommand → error + usage; no stack trace → T-CLI-ERR-001
+- Unknown subcommand → error + usage; no stack trace (via `optparse-applicative`) → T-CLI-ERR-001
 - Newline-terminated output → T-CLI-FMT-001
 - ~100ms responsiveness → T-CLI-PERF-001
 - `--log-level debug` logs structured debug → T-CLI-LOG-001

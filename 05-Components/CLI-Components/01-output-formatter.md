@@ -35,7 +35,7 @@ aliases: [Output Formatter, Formatter Component, Terminal Output]
 ## Collaborators & Dependencies
 - Internal: Used by [[Help Formatter]], [[Error Handler]], [[CLI Parser]]
 - External: System terminal APIs, environment variables
-- Notes: All output components use this for consistent formatting; cache TTY detection at startup; honor NO_COLOR and --no-color; route human output to stdout and errors/logs to stderr; provide Unicode/ASCII palettes with DUET_RPC_ASCII override.
+- Notes: All output components use this for consistent formatting; cache TTY detection at startup; honor NO_COLOR and --no-color; route human output to stdout and errors/logs to stderr; provide Unicode/ASCII palettes with DUET_RPC_ASCII override. Parser failures raised by `optparse-applicative` may bypass the formatter and use the library’s stock messaging.
 
 ## Risks & Open Questions
 - Cross-platform terminal compatibility (ensure ansi-terminal covers Windows VT)

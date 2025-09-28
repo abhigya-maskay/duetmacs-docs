@@ -27,7 +27,7 @@ aliases: [Error Handler]
 ## Collaborators & Dependencies
 - Internal: OutputFormatter (for error styling), HelpFormatter (for usage hints)
 - External: Process exit APIs
-- Notes: Ensures consistent error experience; no stack traces for user errors; for usage errors print parser diagnostics and "Use --help" hint; in debug log-level include exception details.
+- Notes: Ensures consistent error experience; no stack traces for user errors; for usage errors print parser diagnostics and "Use --help" hint; in debug log-level include exception details. CLI parser failures surfaced directly from `optparse-applicative` are exempt from OutputFormatter wrapping.
 
 ## Risks & Open Questions
 - Decision: Exit codes 0/2/1 mapping confirmed for Story 001.

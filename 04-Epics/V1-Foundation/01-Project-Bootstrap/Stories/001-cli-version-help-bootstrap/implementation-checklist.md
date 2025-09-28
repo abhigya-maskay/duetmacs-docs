@@ -15,10 +15,10 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Test: `cabal build` succeeds. `cabal run duet-rpc -- --help` prints default help.
 
 - [x] 2. Add entrypoint and base CLI wiring
-  - Code: Implement `app/Main.hs` with `optparse-applicative`. Enable `showHelpOnEmpty` and `showHelpOnError`. Parse globals: `-V/--version`, `-h/--help`, `--log-level {debug|info|warn|error}`, `--no-color`. Register subcommands: `version`, `doctor`, `rpc`, `prompt` (only `version` wired for now). No args → help. Unknown subcmd/flag → error + usage.
+  - Code: Implement `app/Main.hs` with `optparse-applicative`. Enable `showHelpOnEmpty` and `showHelpOnError`. Parse globals: `-V/--version`, `-h/--help`, `--log-level {debug|info|warn|error}`, `--no-color`. Register subcommands: `version`, `doctor`, `rpc`, `prompt` (only `version` wired for now). No args → help. Unknown subcmd/flag → rely on `optparse-applicative`'s built-in error + usage emission on stderr (no custom reformatting required).
   - Test:
     - T-CLI-HLP-002: `duet-rpc` (no args) shows help.
-    - T-CLI-ERR-001: `duet-rpc frobnicate` → error + usage on stderr; stdout empty; no stack trace.
+    - T-CLI-ERR-001: `duet-rpc frobnicate` exits non-zero and `optparse-applicative` prints error + usage to stderr; stdout remains empty; no stack trace.
 
 - [x] 3. Implement VersionManager and `version` command
   - Code: Create module to read `Paths_duet_rpc.version` and render semver. Wire `version` subcommand and global `--version` to print the same string to stdout with trailing newline.
@@ -52,8 +52,8 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Test: Unit test asserts constants/types exist and precedence order is documented (P2).
 
 - [x] 9. Ensure newline-terminated outputs everywhere
-  - Code: Audit all writes (version, help, errors) to ensure trailing newline.
-  - Test: T-CLI-FMT-001: Assert newline at end of stdout/stderr outputs.
+  - Code: Audit all writes (version, help, errors) to ensure trailing newline, excluding `optparse-applicative`'s own parser error output.
+  - Test: T-CLI-FMT-001: Assert newline at end of stdout/stderr outputs we control directly.
 
 - [x] 10. Performance sanity
   - Code: Keep startup minimal; avoid heavy IO on boot; lazy/open log file on first write where possible.
@@ -81,7 +81,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
 
 - [ ] `duet-rpc --version` and `duet-rpc version` print the same semver.
 - [ ] `duet-rpc --help` and `duet-rpc` show synopsis, subcommands, and footer.
-- [ ] Unknown subcommand/flag → error + usage; no stack trace.
+- [ ] Unknown subcommand/flag → error + usage; no stack trace (accept `optparse-applicative`'s default formatting on stderr).
 - [ ] Help output color rules: colorized on TTY; plain when piped; honors `NO_COLOR` and `--no-color`.
 - [ ] Logging: default warn to stderr; `--log-level` applied; `DUET_RPC_LOG` routes to file; invalid path falls back to stderr with single warning.
 - [ ] All outputs newline-terminated.
