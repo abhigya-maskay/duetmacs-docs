@@ -72,6 +72,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - E2E | P1 | Default warn+ only; `version` outputs no logs by default.
 - E2E | P1 | `DUET_RPC_LOG=<file>` routes logs to file; stderr quiet.
 - E2E | P1 | `DUET_RPC_LOG` invalid path → logger falls back to stderr with a warning; command output/exit unchanged.
+- **Format Guard**: `test/Duet/Rpc/Test/CLI/Logging.hs` validates that structured log lines start with Katip’s bracketed prefix `[timestamp][namespace][Level]` (timestamp accepted in ISO-8601 or local form) before message text, keeping observability docs and tests in sync.
 
 ### Format
 - E2E | P0 | `--version`/`--help` complete ~100ms (CI threshold relaxed).
@@ -111,6 +112,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - Assertions: Golden help text (plain variant) via tasty-golden; regex for ANSI absence/presence and log structure; compare `version` outputs for equality.
  
 - Determinism: Avoid asserting timestamps; match ISO-8601 pattern and level names only.
+  - Helper `assertStructuredLogPrefix` parses the first three Katip brackets and tolerates ISO-8601 (`2025-09-28T17:45:12Z`) or local (`2025-09-28 17:45:12`) timestamps while ensuring the `[Level]` token stays capitalized.
   - For invalid log path, assert presence of a warning substring (e.g., "log" and "failed"/"cannot") rather than exact wording.
 
 ## Traceability (AC → Tests)
