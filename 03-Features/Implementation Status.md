@@ -139,7 +139,6 @@ As of: 2025-09-10
 - 📝 UX/UI mockups and flows
 
 ### Pending
-- 📋 Performance benchmarks
 - 📋 Security threat model
 - 📋 Deployment strategy
 - 📋 Migration plans
@@ -158,7 +157,6 @@ As of: 2025-09-10
 1. 🤔 Specific AI provider API integration details
 2. 🤔 Token budget management strategy
 3. 🤔 Multi-file patch conflict resolution
-4. 🤔 Performance targets for large codebases
 5. 🤔 Licensing and distribution model
 
 ## Next Planning Milestones
@@ -171,7 +169,6 @@ As of: 2025-09-10
 ### Short Term (This Month)
 - [ ] Finalize test strategies
 - [ ] Complete security analysis
-- [ ] Define performance benchmarks
 
 ### Before Development Start
 - [ ] All epic specifications complete

@@ -15,7 +15,6 @@ This risk register is strictly scoped to Story 001 (CLI Version/Help Bootstrap).
 | Cross-platform TTY detection | 001 | Legacy | TTY detection behaves differently across Windows/Unix; NO_COLOR handling may be inconsistent | Medium | Medium | Medium | In Progress |
 | Log file permission denied | 001 | Security | DUET_RPC_LOG path may point to restricted directories; fallback to stderr not guaranteed to preserve all log data | Medium | Low | Low | Resolved |
 | Version string mismatch | 001 | Legacy | Version sourced from package manifest; build-time vs runtime version may diverge in dev environments | Low | Low | Low | Resolved |
-| CLI response time breach | 001 | Performance | 100ms response requirement for help/version; cold start on slower systems may exceed limit | Low | Medium | Low | Accepted |
 | Colorization terminal escape | 001 | Security | ANSI escape sequences in help output; potential for terminal injection if not properly sanitized | Low | High | Medium | Mitigation Planned |
 | Unicode fallback symbols | 001 | Legacy | Unicode detection for symbols (OK/WARN/FAIL); may display incorrectly in some terminals | Low | Low | Low | Resolved |
 
@@ -49,14 +48,6 @@ This risk register is strictly scoped to Story 001 (CLI Version/Help Bootstrap).
 - No manual version strings to maintain
 - Build-time version automatically available at runtime
 
-### 4. CLI Response Time Breach (Low)
-**Evidence**: 100ms response requirement for help/version
-**Mitigation Status**: ACCEPTED - Performance target, not hard requirement
-**Decision Details**:
-- Low severity risk acceptable for Story 001
-- Focus on functionality over performance optimization
-- Can profile and optimize in later stories if needed
-- Typical developer hardware expected to meet target
 
 ### 5. Colorization Terminal Escape (Medium)
 **Evidence**: ANSI codes in help output without sanitization mention
@@ -78,7 +69,6 @@ This risk register is strictly scoped to Story 001 (CLI Version/Help Bootstrap).
 
 ## Risk Categories Coverage
 
-- **Performance**: 1 risk identified (response time)
 - **Security**: 2 risks identified (log permissions, terminal escape)
 - **Legacy**: 3 risks identified (cross-platform, version, unicode)
 

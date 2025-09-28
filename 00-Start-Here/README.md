@@ -49,7 +49,7 @@ Welcome to the DuetMacs project documentation. DuetMacs is an AI-assisted develo
 - [[Error Handling]] - Error management patterns (planned)
 - [[Observability]] - Logging and monitoring (planned)
 - [[Security Guidelines]] - Security best practices (planned)
-- [[Performance Targets]] - Performance requirements (planned)
+
 
 ### 📚 Reference
 - [[Glossary]] - Project terminology

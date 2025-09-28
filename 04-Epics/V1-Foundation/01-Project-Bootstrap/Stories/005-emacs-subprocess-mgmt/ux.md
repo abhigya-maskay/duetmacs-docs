@@ -65,7 +65,7 @@ Modeline Indicator
 Metrics and Events
 - GSM: Goal—reliable lifecycle; Signal—successful starts/stops, timely health checks; Metrics—start success rate, median start time, ping success rate
 - Events: `rpc:start_attempt`, `rpc:start_success`, `rpc:start_timeout`, `rpc:stop_attempt`, `rpc:stop_success`, `rpc:status_view`, `rpc:health_ok`, `rpc:health_fail`, `rpc:unexpected_exit`
-- Performance: start feedback within 200 ms; health ping within 1s; no-blocking UI
+ 
 
 Data/Decisions and Config
 - Health checks: ping interval 1s; failure threshold 2 consecutive failures → show degraded state

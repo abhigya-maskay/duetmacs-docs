@@ -25,7 +25,6 @@ Ensures code quality and prevents regressions by running automated tests on ever
 - CLI commands (version, help, doctor)
 - Basic functionality verification
 - Cross-platform compatibility
-- Performance benchmarks
 
 ---
 *Navigation: [[00-Start-Here/README|Home]] > [[04-Epics]] > [[04-Epics/V1-Foundation/01-Project-Bootstrap/README|Project Bootstrap]] > [[04-Epics/V1-Foundation/01-Project-Bootstrap/Stories/README|Stories]] > Story 008*

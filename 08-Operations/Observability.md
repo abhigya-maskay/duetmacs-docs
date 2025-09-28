@@ -20,9 +20,8 @@ For Story 001, observability is limited to minimal structured logging required b
 - No remote aggregation, no correlation IDs
 
 ### Out of Scope (removed for Story 001)
-- Metrics (performance/usage/system)
-- RPC tracing or message dumps
-- Telemetry/remote logging
+ - RPC tracing or message dumps
+ - Telemetry/remote logging
 
 ### Implementation (Story 001)
 - Logging library: Katip (Haskell) or equivalent for structured logs
@@ -37,7 +36,7 @@ For Story 001, observability is limited to minimal structured logging required b
 ## Related Documentation
 - [[05-Components/CLI-Components/03-logger|Logger Component]] - Core logging implementation
 - [[08-Operations/Error Handling|Error Handling]] - Usage-error and fallback logging
-- [[08-Operations/Performance Targets|Performance Targets]] - Version/help responsiveness
+
 
 ---
 *Navigation: [[00-Start-Here/README|Home]] > [[08-Operations]] > Observability*

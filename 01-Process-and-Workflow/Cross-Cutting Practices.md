@@ -48,34 +48,8 @@ These practices apply throughout all phases of the [[Feature Development Workflo
 3. **Consistency**: Pattern adherence
 4. **Coverage**: Test completeness
 5. **Security**: Input validation
-6. **Performance**: Efficiency concerns
 
-## Performance Awareness
 
-### Performance Considerations
-
-#### Always Consider
-- Algorithm complexity (O notation)
-- Memory allocation patterns
-- Database query efficiency
-- Network request batching
-- Caching opportunities
-
-#### Performance Red Flags
-- Nested loops over large datasets
-- Unbounded memory growth
-- Synchronous I/O in hot paths
-- Missing database indexes
-- Repeated expensive computations
-
-### Performance Targets
-
-| Operation Type | Target | Maximum |
-|---------------|--------|---------|
-| UI Response | <100ms | 200ms |
-| API Response | <200ms | 1000ms |
-| Batch Processing | <1s/1000 items | 5s/1000 items |
-| Startup Time | <500ms | 2000ms |
 
 ## Security Best Practices
 
@@ -131,7 +105,6 @@ These practices apply throughout all phases of the [[Feature Development Workflo
 - Edge cases
 - Error conditions
 - Integration points
-- Performance requirements
 
 #### What Not to Test
 - Framework code
@@ -237,7 +210,7 @@ Brief description of changes
 
 ### Metrics to Track
 
-- Request rate and latency
+- Request rate
 - Error rate and types
 - Resource utilization
 - Business metrics
@@ -249,7 +222,7 @@ Brief description of changes
 - [[Decision Points]] - Decision framework
 - [[Test Strategy]] - Testing details
 - [[Security Guidelines]] - Security specifics
-- [[Performance Targets]] - Performance requirements
+
 
 ---
 *Navigation: [[00-Start-Here/README|Home]] > [[01-Process-and-Workflow]] > Cross-Cutting Practices*

@@ -55,9 +55,6 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Code: Audit all writes (version, help, errors) to ensure trailing newline, excluding `optparse-applicative`'s own parser error output.
   - Test: T-CLI-FMT-001: Assert newline at end of stdout/stderr outputs we control directly.
 
-- [x] 10. Performance sanity
-  - Code: Keep startup minimal; avoid heavy IO on boot; lazy/open log file on first write where possible.
-  - Test: T-CLI-PERF-001: Measure `duet-rpc --version` and `--help` complete within relaxed CI threshold (e.g., <200ms after warmup).
 
 - [x] 11. Test suite scaffolding and golden setup
   - Code: Add `test` target; helper to spawn built exe via `typed-process`; per-test temp dirs via `temporary`. Store `test/golden/help_plain.txt` captured with `NO_COLOR=1 duet-rpc --help`.
@@ -85,5 +82,4 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
 - [ ] Help output color rules: colorized on TTY; plain when piped; honors `NO_COLOR` and `--no-color`.
 - [ ] Logging: default warn to stderr; `--log-level` applied; `DUET_RPC_LOG` routes to file; invalid path falls back to stderr with single warning.
 - [ ] All outputs newline-terminated.
-- [ ] Typical run responds within ~100ms (relaxed to ~200ms in CI).
 - [ ] Tests (P0) are green; golden help approved.

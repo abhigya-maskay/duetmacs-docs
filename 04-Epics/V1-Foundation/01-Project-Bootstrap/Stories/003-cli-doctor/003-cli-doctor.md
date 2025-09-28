@@ -17,7 +17,6 @@ As a CLI user, I want a `duet-rpc doctor` command that inspects my environment a
 - Network/provider connectivity checks
 - Emacs integration
 - Writing configs or changing user environment
-- Performance benchmarking
 
 ## Business Rationale
 - Provides immediate, actionable feedback to reduce setup friction and support requests.
@@ -54,5 +53,4 @@ As a CLI user, I want a `duet-rpc doctor` command that inspects my environment a
 ## Success Metrics
 - `duet-rpc doctor` passes on supported platforms in CI.
 - Users report fewer setup issues due to clear, actionable diagnostics.
- - Median local runtime < 2s (P95 < 5s);
- - JSON schema for `--json` output validated in CI.
+- JSON schema for `--json` output validated in CI.

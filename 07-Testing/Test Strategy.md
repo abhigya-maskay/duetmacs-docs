@@ -21,14 +21,14 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - Environment variables: `DUET_RPC_LOG`, `NO_COLOR`.
 - Error handling for unknown subcommands/flags.
 - Output format: newline-terminated, color rules, help structure.
-- Performance target for version/help (~100ms typical hardware) per [[Performance Targets]].
+ 
 
 ## Out of Scope
 - Behavior for doctor, rpc, prompt commands (separate stories)
 - Full configuration loading/validation (skeleton only)
 - Packaging, release, and editor integration
 - Cross-story integration tests
-- Performance benchmarks beyond basic threshold
+ 
 
 ## Inputs & References
 - Story: [[001-cli-version-help-bootstrap|Story 001: CLI Version/Help Bootstrap]]
@@ -73,7 +73,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - E2E | P1 | `DUET_RPC_LOG=<file>` routes logs to file; stderr quiet.
 - E2E | P1 | `DUET_RPC_LOG` invalid path → logger falls back to stderr with a warning; command output/exit unchanged.
 
-### Performance/Format
+### Format
 - E2E | P0 | `--version`/`--help` complete ~100ms (CI threshold relaxed).
 - E2E | P0 | All outputs newline-terminated.
 
@@ -100,8 +100,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
   - Expect: logs written to file; stderr quiet; file lines include timestamp/level/message.
 - T-CLI-LOG-NEG-001 (P1): `DUET_RPC_LOG=$TMP/nonexistent/subdir/file.log duet-rpc --log-level debug version`
   - Expect: stderr contains a clear warning about failing to open/write log file (no stack trace); stdout version.
-- T-CLI-PERF-001 (P0): Measure duration of `--version` and `--help`
-  - Expect: under threshold (e.g., <200ms CI); warmup first run.
+ 
 - T-CLI-SYN-001 (P1): `-h` and `-V` parity with long flags.
 - T-CLI-FMT-001 (P0): Newline at end of stdout/stderr outputs.
 
@@ -110,7 +109,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - Env control: Set `NO_COLOR`, `DUET_RPC_LOG`, `--log-level` per test; isolate with per-test temp dirs.
 - TTY simulation: Prefer `script -q -c "<cmd>" /dev/null` on Unix-like CI to emulate a TTY; gate or use ConPTY alternatives on Windows.
 - Assertions: Golden help text (plain variant) via tasty-golden; regex for ANSI absence/presence and log structure; compare `version` outputs for equality.
-- Performance: Warmup then measure; soft threshold with CI headroom.
+ 
 - Determinism: Avoid asserting timestamps; match ISO-8601 pattern and level names only.
   - For invalid log path, assert presence of a warning substring (e.g., "log" and "failed"/"cannot") rather than exact wording.
 
@@ -122,7 +121,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 - Help lists `doctor`, `rpc`, `prompt` → T-CLI-HLP-001 golden
 - Unknown subcommand → error + usage; no stack trace → T-CLI-ERR-001
 - Newline-terminated output → T-CLI-FMT-001
-- ~100ms responsiveness → T-CLI-PERF-001
+ 
 - `--log-level debug` logs structured debug → T-CLI-LOG-001
 - Default warn+ only → T-CLI-LOG-001 (stderr quiet on success)
 - `DUET_RPC_LOG` to file → T-CLI-LOG-002
@@ -145,7 +144,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 
 ## Risks & Mitigations
 - PTY flakiness on Windows → gate or use ConPTY; ensure non-TTY path covered everywhere.
-- Performance variance in CI → relaxed thresholds; skip timing on constrained runners.
+ 
 - Help text drift → review golden diffs; update intentionally.
 
 ## Open Questions

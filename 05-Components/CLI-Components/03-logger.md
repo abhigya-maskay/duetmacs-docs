@@ -20,7 +20,7 @@ aliases: [Logger]
 
 ## Boundaries
 - In-scope: Log level filtering, output routing, structured formatting
-- Out-of-scope: Log aggregation, remote logging, performance profiling
+- Out-of-scope: Log aggregation, remote logging
 - Inputs (conceptual): Log level, message, context data
 - Outputs (conceptual): Formatted log entries to configured destination
 
@@ -31,5 +31,5 @@ aliases: [Logger]
 
 ## Risks & Open Questions
 - Decision: No built-in log rotation in Story 001; rely on external rotation.
-- Risk: Performance impact of debug logging — mitigate by guarding construction of debug messages.
+- Risk: Debug logging can add overhead — mitigate by guarding construction of debug messages.
 - Risk: Invalid/unwritable `DUET_RPC_LOG` path — fallback to stderr with a single clear warning, without affecting command output.

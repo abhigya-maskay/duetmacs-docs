@@ -32,7 +32,6 @@ Copy
 Patterns and States
 - Success: outputs match above
 - Error: unknown subcommand/flag → error + usage; no stack traces
-- Performance: responds within ~100ms; newline-terminated output
 - Color: colorized help when TTY; honor `NO_COLOR`; plain when piped
 - Logging: Default warn level to stderr; `--log-level` overrides; `DUET_RPC_LOG` redirects to file
 - Log format: Structured with timestamp, level, message (e.g., `2024-01-15T10:30:45Z WARN Command not found`)

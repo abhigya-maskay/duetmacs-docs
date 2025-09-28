@@ -46,7 +46,6 @@ graph TD
 | Risk Category      | Indicators                                                                   | Required Actions                                                          |
 | ------------------ | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | **External APIs**  | • Third-party services<br>• Rate limits<br>• Authentication                  | • API research<br>• PoC implementation<br>• Error handling plan           |
-| **Performance**    | • Large data sets<br>• Real-time requirements<br>• Resource constraints      | • Performance targets<br>• Bottleneck analysis<br>• Optimization strategy |
 | **Security**       | • User data handling<br>• Authentication/authorization<br>• Encryption needs | • Threat modeling<br>• Access control design<br>• Data protection plan    |
 | **Legacy Systems** | • Old codebase<br>• Undocumented behavior<br>• Technical debt                | • Pattern analysis<br>• Dependency mapping<br>• Compatibility planning    |
 
@@ -83,7 +82,6 @@ graph TD
 | **Unit Tests** | 80-90% | Always |
 | **Integration Tests** | 60-70% | Multiple components |
 | **End-to-End Tests** | Critical paths | User-facing features |
-| **Performance Tests** | Benchmarks | Performance-critical |
 | **Security Tests** | Attack vectors | Security-sensitive |
 
 ## Decision Framework
@@ -92,9 +90,8 @@ graph TD
 
 1. **Can this be done in one file?** → Simple path
 2. **Does it touch external systems?** → Risk assessment needed
-3. **Is performance critical?** → Performance planning required
-4. **Are there security implications?** → Security review mandatory
-5. **Will it affect existing users?** → Migration plan needed
+3. **Are there security implications?** → Security review mandatory
+4. **Will it affect existing users?** → Migration plan needed
 
 ### Escalation Triggers
 

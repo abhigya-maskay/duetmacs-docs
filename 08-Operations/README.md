@@ -11,7 +11,7 @@ In-scope topics (Story 001 only):
 - [[Error Handling]] — CLI bootstrap errors
 - [[Observability]] — logging only (stderr/file, levels)
 - [[Security Guidelines]] — logging hygiene only
-- [[Performance Targets]] — version/help responsiveness
+
 
 ---
 *Navigation: [[00-Start-Here/README|Home]] > 08-Operations*

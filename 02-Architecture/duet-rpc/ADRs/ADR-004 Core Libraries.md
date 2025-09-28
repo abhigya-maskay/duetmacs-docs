@@ -11,7 +11,7 @@ aliases: [ADR-004]
 ## Context
 - Need robust libraries for CLI parsing, JSON, logging, HTTP
 - Consistency and maintainability important
-- Performance requirements are moderate
+
 
 ## Options
 Multiple library choices per category (see details below)
@@ -45,4 +45,3 @@ None
 
 ## References
 - All Epic 1 stories
-

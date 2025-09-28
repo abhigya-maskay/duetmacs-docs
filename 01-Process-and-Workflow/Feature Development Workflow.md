@@ -21,7 +21,7 @@ aliases: [Workflow, Development Process, Feature Workflow]
 ## Phase 2: Technical High-Level Planning
 - **Codebase Analysis**: Analyze existing codebase patterns
 - **Technical Decision Documentation**: Document key technical choices and their rationale
-- **Non-functional Requirements**: Define performance, security, and maintainability requirements for the feature
+- **Non-functional Requirements**: Define security and maintainability requirements for the feature
 - **Dependency Assessment**: Identify existing libraries, services, and APIs that will be used or affected
 - **Risk & Impact Assessment**: Identify potential technical risks and impacts on existing functionality
 
@@ -29,7 +29,6 @@ aliases: [Workflow, Development Process, Feature Workflow]
 **If high-risk factors detected, complete ALL relevant sub-tasks before proceeding to Phase 3:**
 
 - **External API Integrations**: Research APIs, build proof of concept, plan error handling
-- **Performance-Critical Code**: Define targets, identify bottlenecks, plan optimization
 - **Security-Sensitive Areas**: Threat modeling, access control, data protection planning
 - **Legacy System Modifications**: Analyze existing patterns, map dependencies, plan compatibility
 
@@ -50,7 +49,7 @@ aliases: [Workflow, Development Process, Feature Workflow]
 
 ## Cross-Cutting Practices (Throughout All Phases)
 - **Code Quality & Documentation**: Follow project conventions, document decisions close to code
-- **Performance & Security Awareness**: Consider performance and security implications throughout
+- **Security Awareness**: Consider security implications throughout
 
 ## Notes
 This workflow is designed for individual developers working on features within a single repository. It emphasizes thorough planning and incremental implementation while maintaining code quality and integration with existing systems. The workflow scales from small feature additions to large feature implementations or modifications to existing functionality.

@@ -36,14 +36,14 @@ flowchart LR
 ## Key Architecture Decisions
 
 ### Process Model
-- Hybrid architecture: Daemon for Emacs (low latency) + one-shot CLI commands (scripting)
+- Hybrid architecture: Daemon for Emacs + one-shot CLI commands (scripting)
 - Concurrency: Green threads with STM for safe state management
 - Single session: Queue/reject concurrent requests for simplicity
 
 ### Communication
 - Protocol: JSON-RPC 2.0 over stdio with LSP-style length-prefixed framing
 - Streaming: Progress notifications for AI token streaming
-- Batching: 100ms update intervals for smooth Emacs UI
+ 
 
 ### Technology Stack
 - Language: Haskell with GHC 9.10
@@ -75,11 +75,7 @@ flowchart LR
 
 ## Non-Functional Requirements
 
-### Performance Targets
-- RPC ping latency: <100ms
-- Context assembly: <500ms
-- Token streaming: Batched every ~100ms
-- Simple commands: ~100ms response time
+ 
 
 ### Resource Limits
 - Max file size: 1MB per file

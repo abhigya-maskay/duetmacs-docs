@@ -24,7 +24,7 @@ Scope: Discoverable `M-x duet-*` commands and a minimal, Doom/Evil-first keybind
 - `duet-rpc-start`:
   - Behavior: if not running, launch process; append one-liner. If already running, prompt to restart (stop → start); default No.
   - One-liner examples:
-    - `[12:03:14] start: launched PID 12345 (v1.2.3) in 180ms`
+    - `[12:03:14] start: launched PID 12345 (v1.2.3)`
     - `[12:03:14] start: already running (PID 12345) — restart?`
   - On failure: append error summary to *DUET RPC*; prompt to open logs.
 - `duet-rpc-stop`:
@@ -47,7 +47,7 @@ Scope: Discoverable `M-x duet-*` commands and a minimal, Doom/Evil-first keybind
   - One-liner example: `[12:07:33] version: v1.2.3 /usr/local/bin/duet-rpc`
 - `duet-refresh` (fast refresh):
   - Behavior: quick ping + status; append one-line summary; do not write to logs.
-  - One-liner example: `[12:08:12] refresh: running PID 12345, ping 42ms`
+  - One-liner example: `[12:08:12] refresh: running PID 12345`
 
 Minibuffer: For all commands, also show a brief `message` mirroring the one-liner result (success/error) without stealing focus, except `start` which opens/selects *DUET RPC*.
 
@@ -74,14 +74,14 @@ Minibuffer: For all commands, also show a brief `message` mirroring the one-line
 - Modeline: show simple indicator — `●` running / `○` stopped.
 
 ## Copy Guidelines (one-liners)
-- Success: state the action, key result, and latency (when relevant).
+- Success: state the action and key result.
 - Errors: state issue + next step; common causes include binary missing, permission, port/bind failures.
 - Prompts: yes/no prompts default to No to prevent accidental stops/kills; error prompt: `Open logs? (y/N)`.
 
 ## Metrics (GSM)
 - Events (present tense, snake_case):
   - `rpc:process_start`, `rpc:process_stop`, `rpc:status_view`, `rpc:doctor_run`, `rpc:version_view`, `ui:dispatch_open`, `rpc:refresh_run`.
-- Fields: timestamp, project root, result (ok/error), latency (ms), pid, version.
+- Fields: timestamp, project root, result (ok/error), pid, version.
 
 ## Validation Checklist
 - Commands discoverable via `M-x duet-*` with clear docstrings and help group.

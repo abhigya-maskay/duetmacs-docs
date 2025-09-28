@@ -89,7 +89,7 @@ Data/Decisions:
   - `platform`: { `os`, `arch` }
   - `checks`: [ { `id`, `title`, `status` (ok|warn|fail|skip), `severity` (info|warn|error), `details`, `doc_url`? } ]
   - `summary`: { `ok`, `warn`, `fail`, `skip` }
-  - `elapsed_ms`: number
+  
 - Verbose (`--verbose`) includes:
   - Resolved binary path and version/build info
   - PATH entries and whether current exe dir is in PATH
@@ -103,19 +103,18 @@ Defaults:
 - No writes or config mutation
 - Color enabled by default; respect `NO_COLOR` and `--no-color`
 - Continue running checks to completion; never abort early (improves diagnostics)
-- Typical runtime target: < 2s on local dev
+ 
 
 Integration:
 - PATH lookup behavior (per-OS guidance)
 - XDG paths on Linux/macOS; Windows roaming profile equivalent out of scope for v1
-- CI usage: enable `--json`; treat WARN as pass, FAIL as fail; capture elapsed time
+- CI usage: enable `--json`; treat WARN as pass, FAIL as fail
 
 GSM:
 - Goals: quickly diagnose setup; reduce support requests
-- Signals: fail/warn counts, time to complete, first-run success rate
+- Signals: fail/warn counts, first-run success rate
 - Metrics:
   - Doctor passes on support matrix in CI
-  - Median runtime < 2s; P95 < 5s
   - JSON schema validated in CI
 
 Questions (resolved):
