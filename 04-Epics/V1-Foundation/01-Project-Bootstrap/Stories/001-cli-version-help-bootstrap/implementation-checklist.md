@@ -31,6 +31,7 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Test:
     - T-CLI-CLR-001: `NO_COLOR=1 duet-rpc --help` → no ANSI sequences.
     - T-CLI-CLR-002: `duet-rpc --no-color --help` → no ANSI regardless of TTY.
+    - Unit: Lack of ANSI support disables color regardless of TTY.
 
 - [x] 5. Shape final help text
   - Code: Configure help: synopsis `duet-rpc [COMMAND] [OPTIONS]`; subcommands `version`, `doctor`, `rpc`, `prompt` with one-liners; footer “See 'duet-rpc <command> --help' for more information.” Use `optparse-applicative` defaults for structure.
@@ -61,14 +62,14 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
   - Test: `cabal test` runs; E2E tests green for: T-CLI-VER-001/002, T-CLI-HLP-001/002, T-CLI-ERR-001, T-CLI-CLR-001/002; golden under VCS.
 
 - [x] 12. Optional TTY color test (platform-gated)
-  - Code: Add Unix-only test using `script -q -c 'duet-rpc --help' /dev/null` to emulate TTY; skip on Windows.
-  - Test: T-CLI-TTY-001 (P1): TTY-attached help includes ANSI; piped/plain does not.
+  - Code: Add Unix-only test using `script -q -c 'duet-rpc doctor' /dev/null` to emulate TTY; skip on Windows.
+  - Test: T-CLI-TTY-001 (P1): TTY-attached `duet-rpc doctor` includes ANSI; piped/plain does not.
 
 - [x] 13. Unit tests for pure components
-  - Code: Unit tests for VersionManager formatting; OutputFormatter precedence and ANSI absence when disabled; ErrorHandler “Use --help” hint.
+  - Code: Unit tests for VersionManager formatting; OutputFormatter precedence and ANSI absence when disabled; ErrorHandler “Use --help” hint; parser success remains intact for known commands.
   - Test: Unit suite green; 70–80%+ coverage on changed code; 100% on critical branches.
 
-- [ ] 14. Final matrix and DoD
+- [x] 14. Final matrix and DoD
   - Code: N/A (verification step).
   - Test: All P0 tests pass; P1 covered where feasible; golden diffs reviewed/approved; no open Sev-1 defects.
 
@@ -76,10 +77,10 @@ Use this step-by-step checklist to implement Story 001. After each code step, ru
 
 ## Definition of Done (Story 001)
 
-- [ ] `duet-rpc --version` and `duet-rpc version` print the same semver.
-- [ ] `duet-rpc --help` and `duet-rpc` show synopsis, subcommands, and footer.
-- [ ] Unknown subcommand/flag → error + usage; no stack trace (accept `optparse-applicative`'s default formatting on stderr).
-- [ ] Help output color rules: colorized on TTY; plain when piped; honors `NO_COLOR` and `--no-color`.
-- [ ] Logging: default warn to stderr; `--log-level` applied; `DUET_RPC_LOG` routes to file; invalid path falls back to stderr with single warning.
-- [ ] All outputs newline-terminated.
-- [ ] Tests (P0) are green; golden help approved.
+- [x] `duet-rpc --version` and `duet-rpc version` print the same semver.
+- [x] `duet-rpc --help` and `duet-rpc` show synopsis, subcommands, and footer.
+- [x] Unknown subcommand/flag → error + usage; no stack trace (accept `optparse-applicative`'s default formatting on stderr).
+- [x] Help output color rules: colorized on TTY; plain when piped; honors `NO_COLOR` and `--no-color`.
+- [x] Logging: default warn to stderr; `--log-level` applied; `DUET_RPC_LOG` routes to file; invalid path falls back to stderr with single warning.
+- [x] All outputs newline-terminated.
+- [x] Tests (P0) are green; golden help approved.

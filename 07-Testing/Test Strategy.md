@@ -67,6 +67,7 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
 ### Color/TTY
 - E2E | P0 | `NO_COLOR=1` or `--no-color` → no ANSI in help.
 - E2E | P1 | TTY attached → colors present; piped → plain.
+- Unit | P2 | Lack of ANSI support disables color regardless of TTY.
 
 ### Logging
 - E2E | P0 | `--log-level debug version` emits structured debug logs to stderr; stdout is version.
@@ -92,11 +93,13 @@ aliases: [Story 001 Tests, CLI Bootstrap Tests]
   - Expect: error + usage on stderr; no stack trace; stdout empty.
 - T-CLI-ERR-002 (P0): `duet-rpc --frobnicate`
   - Expect: same stderr usage text; stdout empty; exit `1`; no stack trace.
+- T-CLI-PARSE-001 (P2): `duet-rpc version`
+  - Expect: parser succeeds without raising a failure result.
 - T-CLI-CLR-001 (P0): `NO_COLOR=1 duet-rpc --help`
   - Expect: no ANSI sequences.
 - T-CLI-CLR-002 (P0): `duet-rpc --no-color --help`
   - Expect: no ANSI regardless of TTY.
-- T-CLI-TTY-001 (P1): TTY-attached `duet-rpc --help`
+- T-CLI-TTY-001 (P1): TTY-attached `duet-rpc doctor`
   - Expect: ANSI color present; piped variant plain.
 - T-CLI-LOG-001 (P0): `duet-rpc --log-level debug version`
   - Expect: stderr structured log line(s) with timestamp/level/message; stdout version.

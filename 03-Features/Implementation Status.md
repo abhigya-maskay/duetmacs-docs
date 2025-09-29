@@ -5,21 +5,21 @@ aliases: [Status, Progress, Implementation Progress, Planning Status]
 
 # Implementation Status
 
-## Project Status: PLANNING PHASE
+## Project Status: EARLY DEVELOPMENT
 
-**Current Stage**: Documentation and Design
-**Development Status**: Not Started
+**Current Stage**: CLI Bootstrap Implementation
+**Development Status**: In Progress (Story 001 completed 2025-09-29)
 **Documentation**: In Progress
 
-Note: All statuses below reflect documentation/specification readiness only; no code exists yet.
+Note: CLI bootstrap (Story 001) is live; remaining statuses below reflect planning readiness for subsequent stories.
 
 ## Overall Planning Progress
 
-As of: 2025-09-10
+As of: 2025-09-29
 
 | Phase | Status | Planning Progress | Target Start |
 |-------|--------|------------------|--------------|
-| V1-Foundation | 📝 Planning | 75% | TBD |
+| V1-Foundation | 🚀 In Progress | 85% | 2025-09-29 |
 | V1.1-Enhancements | 💭 Concept | 20% | TBD |
 | V2-Future | 💭 Concept | 5% | TBD |
 
@@ -30,12 +30,14 @@ As of: 2025-09-10
 
 | Component       | Planning Status | Specification             |
 | --------------- | --------------- | ------------------------- |
-| CLI Scaffolding | ✅ Specified     | Binary: duet-rpc          |
+| CLI Scaffolding | ✅ Implemented | Story 001 delivered (duet-rpc bootstrap) |
 | Emacs Package   | ✅ Specified     | Package structure defined |
-| Version Command | ✅ Specified     | --version flag            |
+| Version Command | ✅ Implemented | Version flag and command shipped |
 | Doctor Command  | ✅ Specified     | Environment checks        |
 | RPC Ping        | ✅ Specified     | Basic handshake           |
 | CI Setup        | 📝 Planning     | GitHub Actions planned    |
+
+Story 001 (CLI Version/Help Bootstrap) completed on 2025-09-29; remaining bootstrap work stays in planning until their execution stories begin.
 
 ### Epic 2: Chat-to-Patch
 **Planning Status**: Partially Defined (60%)
@@ -77,13 +79,13 @@ As of: 2025-09-10
 
 | Component | Design Status | Documentation |
 |-----------|---------------|---------------|
-| Output Formatter | 💭 Identified | 📝 Described |
-| Version Manager | 💭 Identified | 📝 Described |
-| Logger | 💭 Identified | 📝 Described |
-| Config Loader | 💭 Identified | 📝 Described |
-| Help Formatter | 💭 Identified | 📝 Described |
-| Error Handler | 💭 Identified | 📝 Described |
-| CLI Parser | 💭 Identified | 📝 Described |
+| Output Formatter | ✅ Implemented | ✅ Documented |
+| Version Manager | ✅ Implemented | ✅ Documented |
+| Logger | ✅ Implemented | ✅ Documented |
+| Config Loader | 📝 Skeleton Ready | 📝 Described |
+| Help Formatter | ✅ Implemented | ✅ Documented |
+| Error Handler | 📝 In Progress | 📝 Described |
+| CLI Parser | ✅ Implemented | ✅ Documented |
 
 ### RPC Components
 
@@ -131,6 +133,7 @@ As of: 2025-09-10
 - ✅ Development workflow definition
 - ✅ Technology stack selection
 - ✅ Component identification
+- ✅ Story 001 CLI version/help bootstrap checklist
 
 ### In Progress
 - 📝 Detailed component specifications
@@ -179,6 +182,7 @@ As of: 2025-09-10
 ## Legend
 
 - ✅ Complete/Fully Specified
+- 🚀 Implementation Underway
 - 📝 In Progress/Planning
 - 📋 Planned/Queued
 - 💭 Concept/Early Ideas
