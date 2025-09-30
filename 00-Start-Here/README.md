@@ -36,7 +36,7 @@ Welcome to the DuetMacs project documentation. DuetMacs is an AI-assisted develo
 - [[Test Strategy]] - Overall testing approach
 
 ### ⚠️ Risk Management
-- [[07-Risk-Register/README|Risk Register]] - Story-specific registers
+- Risk registers are maintained within each story folder (e.g., `Stories/*/risk-register.md`)
 
 ## Key Concepts
 

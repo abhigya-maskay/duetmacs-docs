@@ -13,7 +13,7 @@ Establishes the foundational CLI with version and help commands, plus core infra
 - **UX Specification**: [[ux]]
 - **Test Strategy**: [[test-strategy]]
 - **Implementation Checklist**: [[implementation-checklist]]
-- **Risk Register**: [[07-Risk-Register/Story-001-CLI-Version-Help-Risk-Register|Story 001 Risks]]
+- **Risk Register**: [[risk-register|Story 001 Risks]]
 
 ## Components
 This story introduces the foundational CLI components (canonical specs in `04-Components/CLI-Components`):

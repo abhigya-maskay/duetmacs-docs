@@ -17,7 +17,6 @@ This vault contains DuetMacs project documentation organized in numbered folders
 04-Components/             Component specifications and interfaces
 05-UX Specifications/      User experience designs
 06-Testing/                Test strategies and documentation
-07-Risk-Register/          Risk tracking per story
 ```
 
 ## Finding Information
@@ -38,7 +37,7 @@ This vault contains DuetMacs project documentation organized in numbered folders
 - **Component Documentation**: `04-Components/`
 - **UX Specifications**: `05-UX-Specifications/`
 - **Test Documentation**: `06-Testing/`
-- **Risk Analysis**: `07-Risk-Register/`
+- **Risk Analysis**: See risk-register.md in each story folder
 
 ### Search Strategies
 
@@ -91,7 +90,7 @@ aliases: [Alternative Names]
 | Current development | [[03-Epics/Epic Roadmap\|Epic Roadmap]] |
 | Component details | [[04-Components/Component Map\|Component Map]] |
 | Test coverage | [[06-Testing/Test Strategy\|Test Strategy]] |
-| Risk assessments | `07-Risk-Register/` folder |
+| Risk assessments | See risk-register.md in each story folder |
 
 ### Document Organization
 
