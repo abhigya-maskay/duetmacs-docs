@@ -5,30 +5,55 @@ aliases: [Feature List, Capabilities]
 
 # Feature Inventory — Project Bootstrap Scope
 
-The current focus is Story 001, which delivers a minimal yet reliable CLI foundation. Features below represent the live and planned capabilities within this epic.
+The current focus is Story 001, which delivers a minimal yet reliable CLI foundation.
 
-## Delivered (Story 001 - Completed 2025-09-29)
-- `duet-rpc --version` flag and `version` command share the semantic version sourced from Cabal metadata.
-- Global `--help` output with command synopsis, help footer, and color-aware formatting.
-- Shared OutputFormatter honors TTY detection, `NO_COLOR`, and `--no-color` overrides.
-- Logging subsystem defaults to warn level on stderr and accepts `--log-level` overrides.
-- `DUET_RPC_LOG` environment variable redirects logs with graceful fallback on failure.
+## Story 001: CLI Version/Help Bootstrap (Completed)
 
-## Components Status (As of Story 001 Completion)
+### Core CLI Features Delivered
+- `duet-rpc --version` flag and `version` command outputting semantic version from Cabal metadata
+- `duet-rpc --help` showing command synopsis with subcommands (version, doctor, rpc, prompt)
+- Default behavior: no arguments shows help and exits 0
+- Unknown command/flag handling: error message + help, exits 1, no stack traces
 
-### Implemented
+### Infrastructure Components Delivered
+- **Logging Infrastructure**:
+  - Structured logging to stderr (warn level default)
+  - `--log-level` flag support (debug|info|warn|error)
+  - `DUET_RPC_LOG` environment variable for file output
+  - Graceful fallback to stderr when log file unavailable
+
+- **Output Formatting**:
+  - TTY/pipe detection at startup
+  - `NO_COLOR` environment variable support
+  - `--no-color` global flag
+  - Color palette: success (green), warning (yellow), error (red), info (cyan), dimmed (gray)
+  - Unicode fallback symbols: OK→[OK], WARN→[WARN], FAIL→[FAIL], INFO→[INFO]
+
+- **Config Skeleton**:
+  - Config search paths defined (constants only, no loading)
+  - Config struct with defaults created
+  - Precedence documented: DUET_RPC_CONFIG → project .duet-rpc.toml → XDG/home config
+
+## Components Implemented (Story 001)
+
+### Fully Implemented
+- **CLI Parser**: Command-line argument parsing with optparse-applicative
 - **Output Formatter**: Terminal output with color management and TTY detection
-- **Version Manager**: Version information from package manifest
-- **Logger**: Structured logging with level control
-- **Help Formatter**: Help text generation and formatting
-- **CLI Parser**: Command-line argument parsing and routing
+- **Version Manager**: Version information from Cabal package manifest
+- **Logger**: Structured logging with level control and file output
+- **Help Formatter**: Help text generation with color-aware formatting
 
-### In Progress
-- **Config Loader**: Skeleton ready - config path constants and defaults defined, no file I/O yet
-- **Error Handler**: Basic error formatting in progress
+### Partially Implemented (Skeleton Only)
+- **Config Loader**: Path constants and defaults defined, no file I/O yet
+- **Error Handler**: Basic error message formatting without stack traces
 
-## Pending Implementation
-- Full config loading with file I/O (beyond Story 001)
-- Complete error handling with all error types
-- RPC components (RPC Handler, Session Manager, etc.)
+## Beyond Story 001 Scope
+
+### Not Yet Started
+- Doctor command implementation
+- RPC command implementation
+- Prompt command implementation
+- Full configuration loading with file I/O
+- RPC components (Handler, Session Manager, Protocol Framer)
 - Emacs integration components
+- CI/CD setup and packaging
