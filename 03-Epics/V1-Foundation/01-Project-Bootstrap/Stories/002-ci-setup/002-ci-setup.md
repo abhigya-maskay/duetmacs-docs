@@ -64,12 +64,15 @@ Establish automated build validation on every pull request to ensure code qualit
 5. **Test Result Artifacts**
    - Generate test result reports
    - Upload as GitHub Actions artifacts
-   - Retain for 90 days
+   - Retain for 7 days (reduced from default 90 days for security)
+   - Use minimal test verbosity (--quiet flag)
+   - Implement secret masking for any test values
 
 6. **Dependency Caching**
    - Cache ~/.cabal/store directory
-   - Key by OS + GHC version + cabal file hash
-   - Restore on subsequent builds
+   - Enhanced key strategy: OS + GHC version + hashes of cabal, cabal.project, and cabal.project.freeze files
+   - Validate cache integrity after restore with dependency hash check
+   - Expected 50-60% build time reduction
 
 ### Out of Scope (Explicit Non-Goals)
 - Deployment or release automation
@@ -145,8 +148,9 @@ Establish automated build validation on every pull request to ensure code qualit
 - GIVEN test execution completes (pass or fail)
 - WHEN test results are generated
 - THEN a test report is uploaded as an artifact
-- AND the artifact is downloadable for 90 days
-- AND the artifact includes detailed test output
+- AND the artifact is downloadable for 7 days
+- AND the artifact includes test output with minimal verbosity
+- AND any sensitive test values are masked
 
 **AC6: Dependency Caching**
 - GIVEN a CI workflow starts
@@ -190,37 +194,47 @@ Establish automated build validation on every pull request to ensure code qualit
 
 ### Workflow Structure
 1. **Trigger**: On pull_request (opened, synchronize, reopened)
+   - Path filtering to skip documentation-only changes (**.md, docs/**, .gitignore, LICENSE)
+   - Conserves GitHub Actions minutes (15-20% reduction)
+   - Concurrency control to cancel outdated builds (25-30% minute reduction)
 2. **Job**: ci-checks
 3. **Steps**:
    - Checkout code
    - Setup Haskell (GHC 9.10, Cabal)
-   - Restore cache (if exists)
+   - Restore cache with enhanced key (OS+GHC+cabal files hashes)
+   - Validate cache integrity with dependency hash check
    - Build project
-   - Run tests
+   - Setup test environment with secret masking
+   - Run tests with --quiet flag for minimal verbosity
    - Run HLint (should have)
    - Run Ormolu (should have)
-   - Upload test artifacts (should have)
-   - Save cache
+   - Upload test artifacts with 7-day retention (reduced from 90 days)
+   - Save cache with enhanced key strategy
 
 ### Configuration Decisions
 - Use `haskell/actions/setup@v2` for Haskell setup
-- Use `actions/cache@v3` for dependency caching
-- Use `actions/upload-artifact@v3` for test results
+- Use `actions/cache@v4` for dependency caching with enhanced keys (includes multiple cabal file types)
+- Use `actions/upload-artifact@v4` for test results with 7-day retention
 - Run all checks in single job to minimize overhead
 - Fail fast on build errors, continue on test/lint errors for visibility
+- Enable path filtering and concurrency control to optimize GitHub Actions minute usage
+- Implement cache validation to detect and handle cache corruption
 
 ## Definition of Done
 
 Story 002 is complete when:
 - [ ] CI workflow file created and committed
-- [ ] Workflow triggers on all PR events
+- [ ] Workflow triggers on all PR events with path filtering for documentation-only changes
+- [ ] Concurrency control implemented to cancel in-progress builds when new commits are pushed
 - [ ] Build step compiles project with GHC 9.10
-- [ ] Test step runs all Tasty tests
+- [ ] Test step runs all Tasty tests with --quiet flag for minimal verbosity
+- [ ] Secret masking configured for test environment values
 - [ ] Build/test failures block PR merge
 - [ ] HLint checks implemented (should have)
 - [ ] Ormolu checks implemented (should have)
-- [ ] Test artifacts uploaded (should have)
-- [ ] Dependency caching working (should have)
+- [ ] Test artifacts uploaded with 7-day retention (should have)
+- [ ] Dependency caching working with enhanced key strategy (cabal + cabal.project + cabal.project.freeze)
+- [ ] Cache integrity validation implemented after restore
 - [ ] README updated with CI badge
 - [ ] All acceptance criteria verified on actual PR
 

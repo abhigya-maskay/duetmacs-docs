@@ -18,7 +18,7 @@ This risk register is strictly scoped to Story 001 (CLI Version/Help Bootstrap).
 | Colorization terminal escape | 001 | Security | ANSI escape sequences in help output; potential for terminal injection if not properly sanitized | Low | High | Medium | Mitigation Planned |
 | Unicode fallback symbols | 001 | Legacy | Unicode detection for symbols (OK/WARN/FAIL); may display incorrectly in some terminals | Low | Low | Low | Resolved |
 
-## Critical Risks Summary
+## Risk Mitigations
 
 ### 1. Cross-Platform TTY Detection (Medium)
 **Evidence**: Multiple platform support implied but Windows-specific behavior not detailed
@@ -71,10 +71,3 @@ This risk register is strictly scoped to Story 001 (CLI Version/Help Bootstrap).
 
 - **Security**: 2 risks identified (log permissions, terminal escape)
 - **Legacy**: 3 risks identified (cross-platform, version, unicode)
-
-## Status Definitions
-- **Assessed**: Risk has been identified and scored but no mitigation planned yet
-- **Mitigation Planned**: Approach to address risk has been defined
-- **In Progress**: Mitigation work is underway
-- **Resolved**: Risk has been eliminated
-- **Accepted**: Risk acknowledged but will not be mitigated
