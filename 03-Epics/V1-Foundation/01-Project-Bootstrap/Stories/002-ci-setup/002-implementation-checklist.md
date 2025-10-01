@@ -48,10 +48,10 @@ Each phase adds functionality without disrupting previous phases. Every step inc
 - **Test Method**: Introduce failing test temporarily, verify workflow fails
 
 ### Step 1.4: Verify PR Status Reporting
-- [ ] Push workflow to feature branch
-- [ ] Open pull request against main branch
-- [ ] Observe GitHub PR checks section shows CI status
-- [ ] Verify branch protection can be configured to require CI check
+- [x] Push workflow to feature branch
+- [x] Open pull request against main branch
+- [x] Observe GitHub PR checks section shows CI status
+- [x] Verify branch protection can be configured to require CI check
 - **Validation**:
   - PR page displays "CI" check with pass/fail status
   - Check details link to workflow run
