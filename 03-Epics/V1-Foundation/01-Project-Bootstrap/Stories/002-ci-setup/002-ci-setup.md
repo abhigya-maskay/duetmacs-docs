@@ -42,7 +42,7 @@ Establish automated build validation on every pull request to ensure code qualit
 1. **Automated PR Builds**
    - Trigger on PR open/synchronize events
    - Build project with Cabal on Linux
-   - Use GHC 9.10
+   - Use GHC 9.10.3 (current stable release as of 30 Sep 2025)
    - Report build status to PR
 
 2. **Automated Test Execution**
@@ -63,15 +63,17 @@ Establish automated build validation on every pull request to ensure code qualit
 
 5. **Test Result Artifacts**
    - Generate test result reports
+   - Capture `cabal test` output to `test-results.log`
    - Upload as GitHub Actions artifacts
    - Retain for 7 days (reduced from default 90 days for security)
-   - Use minimal test verbosity (--quiet flag)
+   - Use focused test verbosity (--hide-successes with direct failure output)
    - Implement secret masking for any test values
 
 6. **Dependency Caching**
    - Cache ~/.cabal/store directory
    - Enhanced key strategy: OS + GHC version + hashes of cabal, cabal.project, and cabal.project.freeze files
    - Validate cache integrity after restore with dependency hash check
+   - Cache fallback keys use `${{ runner.os }}-ghc-9.10-cabal-` then `${{ runner.os }}-ghc-cabal-`
    - Expected 50-60% build time reduction
 
 ### Out of Scope (Explicit Non-Goals)
@@ -91,7 +93,7 @@ Establish automated build validation on every pull request to ensure code qualit
 ### Environment Requirements
 - **Platform**: Linux (ubuntu-latest)
 - **Language**: Haskell
-- **Compiler**: GHC 9.10
+- **Compiler**: GHC 9.10.3 (track latest 9.10.x patch release)
 - **Build Tool**: Cabal
 - **Test Framework**: Tasty (existing)
 - **Code Quality**: HLint, Ormolu
@@ -117,7 +119,7 @@ Establish automated build validation on every pull request to ensure code qualit
 **AC1: Automated PR Builds**
 - GIVEN a pull request is opened or synchronized
 - WHEN the CI workflow triggers automatically
-- THEN the project builds with Cabal using GHC 9.10 on Linux
+- THEN the project builds with Cabal using GHC 9.10.3 on Linux
 - AND the build status (pass/fail) appears on the PR page
 - AND build failures prevent PR merging
 
@@ -163,14 +165,14 @@ Establish automated build validation on every pull request to ensure code qualit
 
 ### Dependencies
 - GitHub Actions must be enabled on the repository
-- Project must build successfully with GHC 9.10 locally
+- Project must build successfully with GHC 9.10.3 locally (and future 9.10.x patches as they ship)
 - Existing Tasty tests must be passing
 - Cabal file must correctly specify all dependencies
 
 ### Constraints
 - Limited to GitHub Actions free tier (2000 minutes/month)
 - Linux-only testing environment
-- Single GHC version (9.10)
+- Single GHC version (9.10.x baseline, currently 9.10.3)
 - No external service dependencies
 - Public repository visibility
 
@@ -200,12 +202,55 @@ Establish automated build validation on every pull request to ensure code qualit
 2. **Job**: ci-checks
 3. **Steps**:
    - Checkout code
-   - Setup Haskell (GHC 9.10, Cabal)
-   - Restore cache with enhanced key (OS+GHC+cabal files hashes)
+   - Setup Haskell (GHC 9.10.3, Cabal)
+   - Restore cache with enhanced key (OS+GHC+cabal files hashes; restore keys fall back to `${{ runner.os }}-ghc-9.10-cabal-` then `${{ runner.os }}-ghc-cabal-`)
    - Validate cache integrity with dependency hash check
+     ```yaml
+     - name: Record dependency hash
+       id: dependency-hash
+       run: echo "hash=${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}" >> "$GITHUB_OUTPUT"
+
+     - name: Validate cache restored
+       if: steps.cabal-cache.outputs.cache-hit == 'true'
+       run: |
+         store_root="$HOME/.cabal/store"
+         expected="${{ steps.dependency-hash.outputs.hash }}"
+         manifest="$store_root/.manifest-hash"
+         if [ ! -f "$manifest" ] || [ "$(cat "$manifest")" != "$expected" ]; then
+           echo "Cached dependencies do not match expected manifest hash."
+           exit 1
+         fi
+       continue-on-error: false
+
+     - name: Persist dependency hash
+       if: success()
+       run: |
+         mkdir -p "$HOME/.cabal/store"
+         echo "${{ steps.dependency-hash.outputs.hash }}" > "$HOME/.cabal/store/.manifest-hash"
+     ```
    - Build project
-   - Setup test environment with secret masking
-   - Run tests with --quiet flag for minimal verbosity
+   - Setup test environment with secret masking (gracefully handles unset secrets)
+     ```yaml
+     - name: Setup test environment
+       run: |
+         # Mask runtime secrets that may surface in logs (skip if not configured)
+         if [ -n "${{ secrets.TEST_API_KEY }}" ]; then
+           echo "::add-mask::${{ secrets.TEST_API_KEY }}"
+           export TEST_API_KEY="${{ secrets.TEST_API_KEY }}"
+         fi
+         if [ -n "${{ secrets.TEST_USER_HOME }}" ]; then
+           echo "::add-mask::${{ secrets.TEST_USER_HOME }}"
+           export TEST_USER_HOME="${{ secrets.TEST_USER_HOME }}"
+         fi
+     ```
+   - Run tests hiding successes while surfacing failure details
+     ```yaml
+     - name: Run tests
+       run: |
+         set -euo pipefail
+         # Keep CI logs focused: hide successes, surface failure details directly
+         cabal test --test-option=--hide-successes --test-option=--show-details=direct | tee test-results.log
+     ```
    - Run HLint (should have)
    - Run Ormolu (should have)
    - Upload test artifacts with 7-day retention (reduced from 90 days)
@@ -213,30 +258,36 @@ Establish automated build validation on every pull request to ensure code qualit
 
 ### Configuration Decisions
 - Use `haskell/actions/setup@v2` for Haskell setup
-- Use `actions/cache@v4` for dependency caching with enhanced keys (includes multiple cabal file types)
-- Use `actions/upload-artifact@v4` for test results with 7-day retention
+- Use `actions/cache@v4` (latest patch v4.3.0, published 24 Sep 2025) for dependency caching with enhanced keys (includes multiple cabal file types)
+- Use `actions/upload-artifact@v4` (latest patch v4.6.2, as of 30 Sep 2025) for test results with 7-day retention
 - Run all checks in single job to minimize overhead
-- Fail fast on build errors, continue on test/lint errors for visibility
+- Fail fast on build, test, lint, and format errors so PR merge is blocked on any violation
 - Enable path filtering and concurrency control to optimize GitHub Actions minute usage
 - Implement cache validation to detect and handle cache corruption
 
 ## Definition of Done
 
-Story 002 is complete when:
+### Must Have
+Story 002 is complete when all mandatory items below are satisfied:
 - [ ] CI workflow file created and committed
-- [ ] Workflow triggers on all PR events with path filtering for documentation-only changes
-- [ ] Concurrency control implemented to cancel in-progress builds when new commits are pushed
-- [ ] Build step compiles project with GHC 9.10
-- [ ] Test step runs all Tasty tests with --quiet flag for minimal verbosity
-- [ ] Secret masking configured for test environment values
-- [ ] Build/test failures block PR merge
-- [ ] HLint checks implemented (should have)
-- [ ] Ormolu checks implemented (should have)
-- [ ] Test artifacts uploaded with 7-day retention (should have)
-- [ ] Dependency caching working with enhanced key strategy (cabal + cabal.project + cabal.project.freeze)
-- [ ] Cache integrity validation implemented after restore
-- [ ] README updated with CI badge
-- [ ] All acceptance criteria verified on actual PR
+- [ ] Workflow triggers on pull_request open, synchronize, and reopen events
+- [ ] Build step compiles the project with GHC 9.10.3 on ubuntu-latest runners
+- [ ] Test step runs all existing Tasty tests (with failures blocking PR merge)
+- [ ] Status checks report back to the PR and enforce branch protection requirements
+
+### Should Have Enhancements (traceable to AC3–AC6)
+The story may be closed with should-have scope once each acceptance criterion is satisfied:
+- [ ] HLint check enforces AC3 (fails CI on reported issues, exposes findings in logs)
+- [ ] Ormolu formatting validation enforces AC4 (fails CI on formatting drift, lists impacted files)
+- [ ] Test artifact handling meets AC5 (uploads 7-day artifact, keeps logs quiet, masks sensitive values)
+- [ ] Dependency caching fulfils AC6 (enhanced key, cache restore verification, measurable build-time reduction)
+
+### Optional Workflow Optimizations (stretch)
+Track separately so they do not block Definition of Done:
+- [ ] Path filtering skips documentation-only changes to conserve CI minutes
+- [ ] Concurrency control cancels in-progress runs when new commits arrive
+- [ ] README carries a CI status badge once checks are green on main
+- [ ] Should-have behaviours proven via at least one PR run (documentation link to run)
 
 ---
 *Navigation: [[03-Epics/V1-Foundation/01-Project-Bootstrap/Stories|Stories]] > Story 002*
