@@ -25,13 +25,13 @@ Each phase adds functionality without disrupting previous phases. Every step inc
   ```
 
 ### Step 1.2: Create Minimal CI Workflow (Build Only)
-- [ ] Create `.github/workflows/ci.yml`
-- [ ] Add workflow name: "CI"
-- [ ] Configure trigger: `pull_request` events (opened, synchronize, reopened)
-- [ ] Define single job: `ci-checks` running on `ubuntu-latest`
-- [ ] Add checkout step: `actions/checkout@v4`
-- [ ] Add Haskell setup: `haskell/actions/setup@v2` with GHC 9.10.3, Cabal latest
-- [ ] Add build step: `cabal build --enable-tests --enable-benchmarks`
+- [x] Create `.github/workflows/ci.yml`
+- [x] Add workflow name: "CI"
+- [x] Configure trigger: `pull_request` events (opened, synchronize, reopened)
+- [x] Define single job: `ci-checks` running on `ubuntu-latest`
+- [x] Add checkout step: `actions/checkout@v4`
+- [x] Add Haskell setup: `haskell/actions/setup@v2` with GHC 9.10.3, Cabal latest
+- [x] Add build step: `cabal build --enable-tests --enable-benchmarks`
 - **Validation**:
   - YAML syntax is valid: `yamllint .github/workflows/ci.yml` (or GitHub's parser)
   - File structure matches expected format
@@ -39,8 +39,8 @@ Each phase adds functionality without disrupting previous phases. Every step inc
 - **Test Method**: Push to branch, verify workflow appears in Actions tab
 
 ### Step 1.3: Add Test Execution Step
-- [ ] Add test step after build: `cabal test`
-- [ ] Ensure step fails workflow if tests fail (default behavior)
+- [x] Add test step after build: `cabal test`
+- [x] Ensure step fails workflow if tests fail (default behavior)
 - **Validation**:
   - Tests execute after build
   - Test failures cause workflow to fail
