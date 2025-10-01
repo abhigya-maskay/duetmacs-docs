@@ -42,7 +42,7 @@ Establish automated build validation on every pull request to ensure code qualit
 1. **Automated PR Builds**
    - Trigger on PR open/synchronize events
    - Build project with Cabal on Linux
-   - Use GHC 9.10.3 (current stable release as of 30 Sep 2025)
+   - Use GHC 9.12.2 (current stable release as of 30 Sep 2025)
    - Report build status to PR
 
 2. **Automated Test Execution**
@@ -73,7 +73,7 @@ Establish automated build validation on every pull request to ensure code qualit
    - Cache ~/.cabal/store directory
    - Enhanced key strategy: OS + GHC version + hashes of cabal, cabal.project, and cabal.project.freeze files
    - Validate cache integrity after restore with dependency hash check
-   - Cache fallback keys use `${{ runner.os }}-ghc-9.10-cabal-` then `${{ runner.os }}-ghc-cabal-`
+   - Cache fallback keys use `${{ runner.os }}-ghc-9.12-cabal-` then `${{ runner.os }}-ghc-cabal-`
    - Expected 50-60% build time reduction
 
 ### Out of Scope (Explicit Non-Goals)
@@ -93,7 +93,7 @@ Establish automated build validation on every pull request to ensure code qualit
 ### Environment Requirements
 - **Platform**: Linux (ubuntu-latest)
 - **Language**: Haskell
-- **Compiler**: GHC 9.10.3 (track latest 9.10.x patch release)
+- **Compiler**: GHC 9.12.2 (track latest 9.12.x patch release)
 - **Build Tool**: Cabal
 - **Test Framework**: Tasty (existing)
 - **Code Quality**: HLint, Ormolu
@@ -119,7 +119,7 @@ Establish automated build validation on every pull request to ensure code qualit
 **AC1: Automated PR Builds**
 - GIVEN a pull request is opened or synchronized
 - WHEN the CI workflow triggers automatically
-- THEN the project builds with Cabal using GHC 9.10.3 on Linux
+- THEN the project builds with Cabal using GHC 9.12.2 on Linux
 - AND the build status (pass/fail) appears on the PR page
 - AND build failures prevent PR merging
 
@@ -165,14 +165,14 @@ Establish automated build validation on every pull request to ensure code qualit
 
 ### Dependencies
 - GitHub Actions must be enabled on the repository
-- Project must build successfully with GHC 9.10.3 locally (and future 9.10.x patches as they ship)
+- Project must build successfully with GHC 9.12.2 locally (and future 9.12.x patches as they ship)
 - Existing Tasty tests must be passing
 - Cabal file must correctly specify all dependencies
 
 ### Constraints
 - Limited to GitHub Actions free tier (2000 minutes/month)
 - Linux-only testing environment
-- Single GHC version (9.10.x baseline, currently 9.10.3)
+- Single GHC version (9.12.x baseline, currently 9.12.2)
 - No external service dependencies
 - Public repository visibility
 
@@ -202,8 +202,8 @@ Establish automated build validation on every pull request to ensure code qualit
 2. **Job**: ci-checks
 3. **Steps**:
    - Checkout code
-   - Setup Haskell (GHC 9.10.3, Cabal)
-   - Restore cache with enhanced key (OS+GHC+cabal files hashes; restore keys fall back to `${{ runner.os }}-ghc-9.10-cabal-` then `${{ runner.os }}-ghc-cabal-`)
+   - Setup Haskell (GHC 9.12.2, Cabal)
+   - Restore cache with enhanced key (OS+GHC+cabal files hashes; restore keys fall back to `${{ runner.os }}-ghc-9.12-cabal-` then `${{ runner.os }}-ghc-cabal-`)
    - Validate cache integrity with dependency hash check
      ```yaml
      - name: Record dependency hash
@@ -271,7 +271,7 @@ Establish automated build validation on every pull request to ensure code qualit
 Story 002 is complete when all mandatory items below are satisfied:
 - [ ] CI workflow file created and committed
 - [ ] Workflow triggers on pull_request open, synchronize, and reopen events
-- [ ] Build step compiles the project with GHC 9.10.3 on ubuntu-latest runners
+- [ ] Build step compiles the project with GHC 9.12.2 on ubuntu-latest runners
 - [ ] Test step runs all existing Tasty tests (with failures blocking PR merge)
 - [ ] Status checks report back to the PR and enforce branch protection requirements
 

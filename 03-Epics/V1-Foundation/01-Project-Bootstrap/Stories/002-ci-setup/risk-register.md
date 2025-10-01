@@ -11,7 +11,7 @@ This risk register is strictly scoped to Story 002 (CI Setup with GitHub Actions
 | Haskell setup action failure | 002 | Integrations | External dependency on haskell/actions/setup@v2; service outage blocks all CI | Low | High | Medium | Risk Accepted |
 | Cache key collisions | 002 | Performance | Cache key based on OS+GHC+cabal hash; hash collisions could restore wrong dependencies | Low | High | Medium | Mitigation Planned |
 | Test artifact data exposure | 002 | Security | Artifacts retained 7 days public; test outputs may contain sensitive debug data | Medium | Medium | Medium | Mitigation Planned |
-| Single GHC version lock-in | 002 | Legacy | Constraint to GHC 9.10.x baseline (currently 9.10.3); future library updates may require compiler migration | Medium | Medium | Medium | Risk Accepted |
+| Single GHC version lock-in | 002 | Legacy | Constraint to GHC 9.12.x baseline (currently 9.12.2); future library updates may require compiler migration | Medium | Medium | Medium | Risk Accepted |
 
 ## Risk Acceptance Decisions
 
@@ -63,9 +63,9 @@ concurrency:
 ### Mitigation 1: Enhanced Cache Key Configuration
 Increase cache key entropy to prevent collisions:
 ```yaml
-key: ${{ runner.os }}-ghc-9.10.3-cabal-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
+key: ${{ runner.os }}-ghc-9.12.2-cabal-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
 restore-keys: |
-  ${{ runner.os }}-ghc-9.10-cabal-
+  ${{ runner.os }}-ghc-9.12-cabal-
   ${{ runner.os }}-ghc-cabal-
 ```
 **Impact**: 95% reduction in collision probability by including multiple file types

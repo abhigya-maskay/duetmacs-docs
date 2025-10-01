@@ -46,7 +46,7 @@ flowchart LR
  
 
 ### Technology Stack
-- Language: Haskell with GHC 9.10
+- Language: Haskell with GHC 9.12
 - Build: Cabal with freeze files for reproducibility
 - Core Libraries:
   - CLI: optparse-applicative

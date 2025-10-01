@@ -30,7 +30,7 @@ aliases: [ADR-003]
 - Out of scope: CI/CD pipeline
 
 ## Decision
-Cabal (B) with GHC 9.10
+Cabal (B) with GHC 9.12
 
 ## Consequences
 - Positive: Official tooling, maximum flexibility

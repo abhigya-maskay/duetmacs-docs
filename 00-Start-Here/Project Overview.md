@@ -50,7 +50,7 @@ The Emacs UI architecture remains documented to guide upcoming work, but impleme
 ## Technology Stack
 
 - **Frontend**: Emacs Lisp with transient menus
-- **Backend**: Haskell with GHC 9.10
+- **Backend**: Haskell with GHC 9.12
 - **Protocol**: JSON-RPC 2.0 over stdio
 - **Build**: Cabal with reproducible builds
 - **Testing**: Property-based testing with Hedgehog

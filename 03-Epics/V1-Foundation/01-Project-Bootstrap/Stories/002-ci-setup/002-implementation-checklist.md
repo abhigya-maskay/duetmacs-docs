@@ -30,7 +30,7 @@ Each phase adds functionality without disrupting previous phases. Every step inc
 - [x] Configure trigger: `pull_request` events (opened, synchronize, reopened)
 - [x] Define single job: `ci-checks` running on `ubuntu-latest`
 - [x] Add checkout step: `actions/checkout@v4`
-- [x] Add Haskell setup: `haskell/actions/setup@v2` with GHC 9.10.3, Cabal latest
+- [x] Add Haskell setup: `haskell/actions/setup@v2` with GHC 9.12.2, Cabal latest
 - [x] Add build step: `cabal build --enable-tests --enable-benchmarks`
 - **Validation**:
   - YAML syntax is valid: `yamllint .github/workflows/ci.yml` (or GitHub's parser)
@@ -125,11 +125,11 @@ Each phase adds functionality without disrupting previous phases. Every step inc
 ### Step 4.1: Add Basic Dependency Caching with Enhanced Keys
 - [ ] Add cache step before build: `actions/cache@v4` with `id: cabal-cache`
 - [ ] Configure path: `~/.cabal/store`
-- [ ] Configure cache key: `${{ runner.os }}-ghc-9.10-cabal-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}`
+- [ ] Configure cache key: `${{ runner.os }}-ghc-9.12-cabal-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}`
 - [ ] Configure restore-keys (fallback hierarchy):
   ```yaml
   restore-keys: |
-    ${{ runner.os }}-ghc-9.10-cabal-
+    ${{ runner.os }}-ghc-9.12-cabal-
     ${{ runner.os }}-ghc-cabal-
   ```
 - [ ] Add save cache step at end of workflow
@@ -229,7 +229,7 @@ Each phase must be validated before proceeding to the next:
 ### Must Have (Story cannot close without these)
 - [ ] Steps 1.1 through 1.4 completed and validated
 - [ ] CI workflow triggers on pull_request events
-- [ ] Build compiles project with GHC 9.10.3
+- [ ] Build compiles project with GHC 9.12.2
 - [ ] Tests run and block merge on failure
 - [ ] Status checks visible on PR
 
