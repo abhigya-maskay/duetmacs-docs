@@ -60,6 +60,7 @@ The following methods expose Story 001 CLI functionality via JSON-RPC:
 6. **`shutdown`** - Gracefully terminates the daemon
    - Params: None
    - Returns: `{"message": "Shutting down gracefully"}`
+   - Also supported as notification (no response sent, follows same 2-second shutdown window)
 
 ### Protocol Requirements (Must Have)
 
@@ -70,10 +71,12 @@ The following methods expose Story 001 CLI functionality via JSON-RPC:
     - Other media types/charsets return error -32600
     - If omitted, assumes default
   - Content-Length (required): Must match UTF-8 byte count
-    - Max size: 10 MB (exceeding returns error -32600)
+    - Max size: 10 MB (exceeding returns error -32600 with `id: null`, payload discarded without reading)
     - Mismatch returns error -32700
-    - Read timeout: 30s (incomplete reads logged, partial data discarded, daemon continues)
+    - Read timeout: 30s per message (incomplete reads logged, partial data discarded, framing state reset, daemon continues; multiple timeouts do not terminate daemon)
+  - Header cap: 8 KB for header section (exceeding returns error -32600 with `id: null`, discarded, daemon continues)
   - Unknown headers: Ignored
+  - Partial frames: Never buffered across timeouts; framing state reset after timeout
   - Compatible with Emacs jsonrpc.el
 
 - **Method Invocation**: Any method callable immediately; no initialization sequence required
@@ -95,15 +98,30 @@ The following methods expose Story 001 CLI functionality via JSON-RPC:
   - Requests handled one at a time in order
   - Clients should not pipeline concurrent requests
 
-- **CLI Compatibility**: `duet-rpc rpc` accepts existing global flags (`--log-level`, `--no-color`, `DUET_RPC_LOG`)
+- **Logging & Diagnostics**:
+  - Logger: Katip
+  - Sinks: Default stderr; if `DUET_RPC_LOG` points to writable file, log there (checked at startup; on failure, warn to stderr and fall back to stderr)
+  - Levels: `debug|info|warn|error` (case-insensitive, normalized to lowercase)
+  - Formatting & color: stderr uses human-readable format with color only when TTY and color enabled; honor `--no-color` flag and `NO_COLOR` env var; file sink uses plain text
+  - Log fields (minimum): `timestamp`, `severity`, `method` (when known), `id` (when parseable, including null; omit if unparseable), `message`
+  - Severity guidance: client-caused errors (parse/invalid-request/invalid-params/unknown-method) → `warn`; internal faults → `error`; lifecycle events → `info`
+  - Privacy/redaction: do not log payload bodies on parse/oversize failures; never log secrets, tokens, or user paths
+  - Startup logging: Log version, PID, active level, and sink (stderr or file path) at startup
+
+- **CLI Compatibility**: `duet-rpc rpc` accepts existing global flags (`--log-level`, `--no-color`) and env vars (`DUET_RPC_LOG`, `NO_COLOR`)
 
 - **Stdout Discipline**: stdout carries ONLY framed JSON-RPC responses
   - All logs/diagnostics go to stderr or log file (if `DUET_RPC_LOG` set)
   - Non-JSON output on stdout breaks client parsers
 
 - **Lifecycle**:
-  - stdin EOF: Graceful shutdown (exit 0 within 2s), logged at `info`
-  - Signals (SIGINT/SIGTERM/SIGHUP): Graceful shutdown (exit 0 within 2s), logged at `info`
+  - stdin EOF: Graceful shutdown (exit 0 within 2s), logged at `info` as "stdin closed, shutting down gracefully"
+  - Signals (SIGINT/SIGTERM/SIGHUP): Graceful shutdown (exit 0 within 2s), logged at `info` with signal name
+  - Shutdown behavior:
+    - Stop reading new frames immediately upon trigger
+    - If current request is `shutdown`, reply then exit
+    - If non-shutdown request running, attempt to finish and send response; if not done by 2s, exit without response
+    - Flush stdout and logs; cap log flush at 500ms; exit anyway if incomplete to meet 2s deadline
   - Framing errors: Log to stderr, send error response if possible, continue
   - Unrecoverable errors: Exit code 1
 
@@ -121,13 +139,18 @@ The following methods expose Story 001 CLI functionality via JSON-RPC:
 ### Error Handling (Must Have)
 
 JSON-RPC 2.0 error codes:
-- **-32700 Parse Error**: Invalid JSON
-- **-32600 Invalid Request**: Malformed JSON-RPC, unsupported Content-Type, or size > 10 MB
+- **-32700 Parse Error**: Invalid JSON or Content-Length mismatch
+- **-32600 Invalid Request**: Malformed JSON-RPC envelope, unsupported Content-Type/charset, request size > 10 MB, header size > 8 KB, invalid id type, batch array
 - **-32601 Method Not Found**: Unknown method
 - **-32602 Invalid Params**: Wrong types or missing required fields
-- **-32603 Internal Error**: Unhandled daemon errors (daemon stays alive)
+- **-32603 Internal Error**: Unexpected server faults (daemon stays alive)
 
-**Error Data**: Optional `error.data` may contain param name, expected/received values. No stack traces, paths, secrets, or env details.
+**Error Response `id`**: Echo request `id` exactly when parseable; use `id: null` if unparseable or size exceeded before reading.
+
+**Error Data Structure** (minimal, non-sensitive):
+- For **-32602**: `{ "param": "...", "expected": "...", "received": "...", "accepted": ["..."]? }`
+- For **-32600**: `{ "reason": "unsupported-content-type|oversize|bad-charset|invalid-id-type|batch-not-supported|header-too-large" }`
+- Never include stack traces, filesystem paths, tokens, or environment values
 
 ## Acceptance Criteria (Given/When/Then)
 
@@ -140,9 +163,11 @@ JSON-RPC 2.0 error codes:
 - `Content-Length: N\r\n\r\n{json}` with matching byte count: parses correctly
 - Multiple consecutive/back-to-back framed messages: processes independently in order
 - `Content-Type: application/vscode-jsonrpc; charset=utf-8` and charset variations (`UTF-8`, `utf-8`): accepted
-- Wrong Content-Type (`application/json`) or charset (`iso-8859-1`): error -32600
+- Wrong Content-Type (`application/json`) or charset (`iso-8859-1`): error -32600 with `error.data.reason: "unsupported-content-type|bad-charset"`
 - Content-Length mismatch: error -32700
-- Content-Length > 10 MB: error -32600
+- Content-Length > 10 MB: error -32600 with `id: null`, `error.data.reason: "oversize"`, payload not read
+- Header section > 8 KB: error -32600 with `id: null`, `error.data.reason: "header-too-large"`
+- Read timeout after 30s: partial data discarded, framing state reset, daemon continues
 - Unknown headers: ignored
 
 ### Methods
@@ -156,44 +181,61 @@ JSON-RPC 2.0 error codes:
   - Invalid level: error -32602 with `error.data` showing accepted values
 
 ### Protocol Behavior
-- Batch requests (JSON array): error -32600 with message "Batch requests not supported"
+- Batch requests (JSON array): error -32600 with message "Batch requests not supported" and `error.data.reason: "batch-not-supported"`
 - Notifications (no `id`): processed silently, no response; unknown methods logged at `warn`
-- Request ID: string/number/null echoed exactly; object/array returns error -32600
+- `shutdown` notification: triggers graceful exit without response, follows same 2-second window
+- Request ID: string/number/null echoed exactly; object/array/boolean returns error -32600 with `error.data.reason: "invalid-id-type"`
 - Response ordering: same order as requests received
 
 ### Lifecycle & Signals
 - stdin EOF: logs "stdin closed, shutting down gracefully" at `info`, exits 0 within 2s
-- SIGINT/SIGTERM: logs signal at `info`, exits 0 within 2s
+- SIGINT/SIGTERM/SIGHUP: logs signal name at `info`, exits 0 within 2s
+- In-flight request during shutdown: attempts to finish and send response; if not done by 2s, exits without response
+- Log flush: capped at 500ms; exits anyway if incomplete to meet 2s deadline
 
 ### Error Cases
 - Invalid JSON: error -32700
 - Missing `jsonrpc` field: error -32600
 - Unknown method: error -32601
 - Missing params: error -32602
+- Internal error: error -32603
 
-### CLI Flags
+### CLI Flags & Environment
 - `--log-level debug`: debug logs on stderr
-- `DUET_RPC_LOG=/tmp/rpc.log`: logs to file
+- `DUET_RPC_LOG=/tmp/rpc.log`: logs to file (checks writability at startup, falls back to stderr on failure with warning)
+- `--no-color`: disables color output
+- `NO_COLOR` env var: disables color output
+- Startup logging: logs version, PID, active level, and sink (stderr or file path)
+- Log fields: includes timestamp, severity, method (when known), id (when parseable)
 
 ### Testing
 - All 6 methods validated with functional tests
-- All 5 error types validated
-- Protocol edge cases: batch, notifications, ID semantics, framing
-- Lifecycle: EOF, SIGINT, SIGTERM
+- All 5 error types validated with error.data structure verification
+- Protocol edge cases: batch, notifications (including shutdown notification), ID semantics, framing
+- Resource limits: 10 MB request size, 8 KB header cap, 30s read timeout, partial frame discard
+- Lifecycle: EOF, SIGINT, SIGTERM, SIGHUP, in-flight request handling, log flush timeout
+- Logging: startup logging, severity levels, field structure, redaction, --no-color, NO_COLOR
 
 ## Assumptions
 - Single-threaded request handling sufficient (high confidence; defer queueing to future if needed)
 
 ## Success Metrics
 - All 6 RPC methods respond correctly in automated tests
-- All error scenarios return spec-compliant responses
-- Lifecycle validated in CI (startup, shutdown, EOF, signals)
-- Protocol compliance validated (batch, notifications, ID, framing, ordering)
-- Resource limits enforced (10 MB, 30s timeout)
+- All error scenarios return spec-compliant responses with correct error.data structure
+- Lifecycle validated in CI (startup, shutdown, EOF, signals, in-flight handling, log flush)
+- Protocol compliance validated (batch, notifications including shutdown notification, ID, framing, ordering)
+- Resource limits enforced (10 MB request size, 8 KB header cap, 30s timeout, partial frame discard)
+- Logging validated (startup logging, severity guidance, field structure, redaction, color control)
 
 ## Related Documentation
 - [[Stories/001-cli-version-help-bootstrap/001-cli-version-help-bootstrap|Story 001]] - CLI foundation
 - [[01-Architecture/duet-rpc/ADRs/ADR-002 RPC Protocol|ADR-002]] - JSON-RPC protocol choice
+- [[01-Architecture/duet-rpc/ADRs/ADR-010 RPC IO Framing & Stdout Discipline|ADR-010]] - RPC I/O framing & stdout discipline
+- [[01-Architecture/duet-rpc/ADRs/ADR-011 Request Semantics & Concurrency v1|ADR-011]] - Request semantics & concurrency
+- [[01-Architecture/duet-rpc/ADRs/ADR-012 Error Translation & Redaction|ADR-012]] - Error translation & redaction
+- [[01-Architecture/duet-rpc/ADRs/ADR-013 Daemon Lifecycle & Signals|ADR-013]] - Daemon lifecycle & signals
+- [[01-Architecture/duet-rpc/ADRs/ADR-014 Logging & Diagnostics Policy|ADR-014]] - Logging & diagnostics policy
+- [[01-Architecture/duet-rpc/ADRs/ADR-015 Resource Limits & Timeouts|ADR-015]] - Resource limits & timeouts
 - [[01-Architecture/duet-rpc/duet-rpc Technical Architecture|Technical Architecture]] - RPC design context
 
 ---
