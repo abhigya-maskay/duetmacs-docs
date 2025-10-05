@@ -9,52 +9,35 @@ aliases: [Overview, About, Introduction]
 
 DuetMacs is an AI-assisted development environment that integrates advanced language models directly into Emacs. It provides intelligent code generation, refactoring, and analysis capabilities through a robust RPC architecture.
 
-## Core Components
+## Core Components (Story 001 Scope)
 
-### 1. Emacs UI (ELisp)
-The frontend that provides:
-- Editor integration and keybindings
-- Command palette for discoverability
-- Context capture (region/buffer/file/project)
-- Diff review and approval workflows
-- Real-time status and progress display
+### 1. CLI Bootstrap (duet-rpc)
+The CLI binary provides:
+- `--version` flag and `version` command sourced from Cabal metadata
+- Global `--help` output with synopsis, command listing, and footer
+- Logging controls (`--log-level`, `DUET_RPC_LOG`) with structured Katip output
+- Output formatting that respects TTY detection, `NO_COLOR`, and `--no-color`
+- Config skeleton documenting search paths and precedence (no file I/O yet)
 
-### 2. RPC CLI Core (duet-rpc)
-A Haskell-based backend that handles:
-- Session orchestration and state management
-- Prompt assembly and context building
-- AI provider integration (OpenAI, Anthropic)
-- Token tracking and rate limiting
-- Safe patch generation with backups
+### 2. Shared Infrastructure
+- OutputFormatter and HelpFormatter establish consistent terminal rendering
+- VersionManager, ErrorHandler, and CLIParser compose the command registry
+- ConfigLoader skeleton defines types/defaults while remaining pure
 
-### 3. Optional Adapters (Future)
-Planned extensions:
-- MCP adapter for cross-client integration
-- Local daemon for shared caching
-- HTTP/gRPC endpoints for remote access
+### 3. Emacs Integration (Documented)
+The Emacs UI architecture remains documented to guide upcoming work, but implementation resumes after the CLI bootstrap milestone.
 
-## Key Features
+## Current Capabilities
+- Build and run `duet-rpc` CLI with version/help surfaces
+- Structured logging with stderr default and file redirection fallback
+- Color-aware output formatting honouring opt-out flags and pipes
+- Config precedence constants for upcoming loader expansion
+- Risk, testing, and UX notes scoped strictly to Story 001
 
-### Chat & Sessions
-- Interactive coding sessions with AI
-- Persistent conversation history
-- Session branching and organization
-
-### Context Management
-- Smart context ingestion from files/projects
-- Respect for .gitignore and custom excludes
-- Template-based prompt construction
-
-### Safety & Controls
-- Dry-run mode by default
-- Write protection with allowlists
-- Automatic backups before changes
-- Size and file count limits
-
-### Multi-Model Support
-- Provider switching (OpenAI, Anthropic)
-- Per-project model configuration
-- Token budget management
+## Work in Flight
+- Formalizing config loader behaviours beyond constants and defaults
+- Finalizing CI coverage for version/help, logging, and formatter scenarios
+- Maintaining alignment between documentation, ADRs, and CLI implementation
 
 ## Design Principles
 
@@ -67,23 +50,21 @@ Planned extensions:
 ## Technology Stack
 
 - **Frontend**: Emacs Lisp with transient menus
-- **Backend**: Haskell with GHC 9.10
+- **Backend**: Haskell with GHC 9.12
 - **Protocol**: JSON-RPC 2.0 over stdio
 - **Build**: Cabal with reproducible builds
 - **Testing**: Property-based testing with Hedgehog
 
 ## Project Status
 
-Currently in **Planning** phase:
-- 📝 Architecture and design documentation
-- 📝 Epic and story specifications
-- 📝 Component identification
-- 📝 Technology stack selection
+Current Phase: **V1-Foundation — CLI Bootstrap**
+- 🚀 Story 001 (CLI version/help) delivered 2025-09-29
+- 📝 Supporting documentation, UX notes, testing strategy, and risk register maintained alongside the CLI
+- 🧪 Additional tests and CI automation under development
 
 ## Related Documentation
 
 - [[System Overview]] - Technical architecture
-- [[Feature Development Workflow]] - How we build features
 - [[Epic Roadmap]] - Development timeline
 - [[Feature Inventory]] - Complete capability list
 
