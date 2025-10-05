@@ -210,7 +210,7 @@ JSON-RPC 2.0 error codes:
 
 ### Testing
 - All 6 methods validated with functional tests
-- All 5 error types validated with error.data structure verification
+ - All 6 error types validated with error.data structure verification
 - Protocol edge cases: batch, notifications (including shutdown notification), ID semantics, framing
 - Resource limits: 10 MB request size, 8 KB header cap, 30s read timeout, partial frame discard
 - Lifecycle: EOF, SIGINT, SIGTERM, SIGHUP, in-flight request handling, log flush timeout

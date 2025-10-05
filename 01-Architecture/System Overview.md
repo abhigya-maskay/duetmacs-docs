@@ -17,6 +17,8 @@ This document outlines a high-level, three-piece architecture and the responsibi
 - Tools & Feedback: Run tests/linters/build commands; capture errors and feed them back into prompts.
 - Persistence: Manage session transcripts, caches, and configuration resolution (global → project) without writing source files directly.
 - Interface: JSON-RPC over stdio with streaming events (status/tokens/patch proposals/tool output). One-shot commands also supported for scripts/CI.
+- Protocol: JSON-RPC 2.0 with LSP-style framing (Content-Length header); UTF-8 encoding only; stdout carries only JSON-RPC responses, logs to stderr or DUET_RPC_LOG. 10 MB max request size, 8 KB header cap, 30s read timeout.
+- Execution: Sequential request processing (one at a time); no batching.
 
 ## 3) Adapters/Services
 - MCP Adapter: Expose selected tools/providers via MCP for cross-client integrations; reuse CLI logic behind a standard interface.
@@ -24,10 +26,10 @@ This document outlines a high-level, three-piece architecture and the responsibi
 - HTTP/gRPC Endpoint: For multi-app or remote workflows; introduce security and ops considerations.
 
 ## 4) Error Handling & Recovery
-- Heartbeat: Periodic keepalive messages between Emacs and duet-rpc (every 30s); detect stalled processes.
 - Reconnection: Automatic restart with exponential backoff (1s, 2s, 4s... max 30s) on duet-rpc crash.
-- Request Queue: Buffer pending requests during disconnection; replay on reconnect or timeout after 60s.
 - Graceful Degradation: Show clear status when duet-rpc unavailable; allow read-only operations and manual recovery.
+- Error Codes: Standard JSON-RPC 2.0 codes; sensitive data redacted from responses.
+- Daemon Shutdown: Graceful exit on SIGINT/SIGTERM/SIGHUP/EOF within 2s; exit code 0 (graceful) or 1 (fatal errors).
 
 ## 5) Observability
 - Structured Logging: Support debug/info/warn/error levels with consistent format; configurable per-component (Emacs UI, duet-rpc).

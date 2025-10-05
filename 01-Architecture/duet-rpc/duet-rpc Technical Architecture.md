@@ -38,12 +38,18 @@ flowchart LR
 ### Process Model
 - Hybrid architecture: Daemon for Emacs + one-shot CLI commands (scripting)
 - Concurrency: Green threads with STM for safe state management
-- Single session: Queue/reject concurrent requests for simplicity
+- Request Handling: Sequential processing (one request at a time); no batching in v1
 
 ### Communication
-- Protocol: JSON-RPC 2.0 over stdio with LSP-style length-prefixed framing
+- Protocol: JSON-RPC 2.0 over stdio with LSP-style framing (Content-Length header, UTF-8 only)
+- Limits: 10 MB request size, 8 KB headers, 30s read timeout
+- I/O: Stdout for JSON-RPC only; logs to stderr or DUET_RPC_LOG
 - Streaming: Progress notifications for AI token streaming
- 
+
+### Lifecycle
+- Triggers: stdin EOF, SIGINT, SIGTERM, SIGHUP → graceful shutdown (2s window)
+- Exit codes: 0 (graceful), 1 (fatal errors)
+- Cleanup: Flushes logs/stdout (500ms cap) before exit
 
 ### Technology Stack
 - Language: Haskell with GHC 9.12
@@ -66,12 +72,14 @@ flowchart LR
 - File operations: Dry-run with confirmation, path canonicalization, jail to project root
 - Error handling: Typed ADTs everywhere for explicit, safe error handling
 - Credentials: Environment variables only (standard practice)
-- Process recovery: Auto-restart with exponential backoff
 
 ### Quality
 - Testing: Property tests (hedgehog) for core logic, unit tests for integration (tasty framework)
 - Linting: hlint + ormolu for consistent code
-- Logging: Four levels (error, warn, info, debug) with warn as default level; --debug flag for RPC dumps
+- Logging: Four levels (error, warn, info, debug) with warn as default; --debug flag for RPC dumps
+  - Dynamic control via setLogLevel RPC method
+  - Output: stderr (default) or file via DUET_RPC_LOG
+  - Redaction: tokens, secrets, paths automatically removed
 
 ## Non-Functional Requirements
 
@@ -79,14 +87,14 @@ flowchart LR
 
 ### Resource Limits
 - Max file size: 1MB per file
-- Total context: 10MB per request
+- Max request size: 10MB (includes headers up to 8KB); 30s read timeout
 - Memory budget: <500MB
-- Concurrency: Single session only
+- Execution: Sequential processing (one request at a time)
 
 ### Reliability
 - Auto-restart on crash with backoff
 - Smart retry for transient errors (3x)
-- Configurable timeout (60s default)
+- Read timeout: 30s per message (fixed in v1)
 - No data loss via mandatory backups
 
 ## Implementation Structure
@@ -116,6 +124,11 @@ data DuetError
   | SessionError SessionError
   deriving (Show, Eq)
 ```
+
+### Error Translation
+- Standard JSON-RPC 2.0 codes (−32700 Parse, −32600 Invalid Request, −32601 Method Not Found, −32602 Invalid Params, −32603 Internal)
+- Minimal error.data with safe fields only; detailed diagnostics to logs
+- Automatic redaction of stack traces, paths, tokens, environment values
 
 ### Configuration Precedence
 1. Command-line flags
