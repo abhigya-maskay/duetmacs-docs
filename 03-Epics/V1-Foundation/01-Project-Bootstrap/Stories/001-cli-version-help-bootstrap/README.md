@@ -12,8 +12,8 @@ Establishes the foundational CLI with version and help commands, plus core infra
 - **Main Specification**: [[001-cli-version-help-bootstrap]]
 - **UX Specification**: [[ux]]
 - **Test Strategy**: [[test-strategy]]
-- **Implementation Checklist**: [[implementation-checklist]]
-- **Risk Register**: [[risk-register|Story 001 Risks]]
+- **Implementation Checklist**: [[003-implementation-checklist]]
+- **Risk Register**: [[03-Epics/V1-Foundation/01-Project-Bootstrap/Stories/001-cli-version-help-bootstrap/risk-register|Story 001 Risks]]
 
 ## Components
 This story introduces the foundational CLI components (canonical specs in `04-Components/CLI-Components`):
