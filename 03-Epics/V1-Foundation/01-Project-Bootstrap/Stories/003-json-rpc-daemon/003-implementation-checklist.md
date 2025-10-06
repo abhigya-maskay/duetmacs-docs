@@ -32,17 +32,17 @@ All implementation must follow the **imperative shell, functional core** pattern
 - [x] Add `async` to duet-rpc.cabal for timeout handling
 
 ### 1.2 Define JSON-RPC Core Types
-- [ ] Create `src/Duet/Rpc/JsonRpc/Types.hs` module
-- [ ] Define `JsonRpcRequest` type with fields: `jsonrpc`, `method`, `params`, `id`
+- [x] Create `src/Duet/Rpc/JsonRpc/Types.hs` module
+- [x] Define `JsonRpcRequest` type with fields: `jsonrpc`, `method`, `params`, `id`
   - `jsonrpc`: must be string "2.0"
   - `method`: string
   - `params`: optional Value (from aeson)
   - `id`: custom type that accepts string, number, or null (reject object/array/boolean)
-- [ ] Define `JsonRpcResponse` type with fields: `jsonrpc`, `result`, `id`
-- [ ] Define `JsonRpcError` type with fields: `jsonrpc`, `error`, `id`
-- [ ] Define `JsonRpcErrorDetail` type with fields: `code`, `message`, `data` (optional)
-- [ ] Define `RequestId` sum type for valid IDs: `IdString Text | IdNumber Scientific | IdNull`
-- [ ] Implement JSON instances (FromJSON/ToJSON) for all types
+- [x] Define `JsonRpcResponse` type with fields: `jsonrpc`, `result`, `id`
+- [x] Define `JsonRpcError` type with fields: `jsonrpc`, `error`, `id`
+- [x] Define `JsonRpcErrorDetail` type with fields: `code`, `message`, `data` (optional)
+- [x] Define `RequestId` sum type for valid IDs: `IdString Text | IdNumber Scientific | IdNull`
+- [x] Implement JSON instances (FromJSON/ToJSON) for all types
   - Ensure RequestId rejects object/array/boolean during parsing
   - Ensure RequestId encoding preserves exact type (string stays string, number stays number)
 
